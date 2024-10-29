@@ -65,7 +65,7 @@ public class PatientService {
             if(patientData.getIdentification_no() != null){
                 existingPatient.setIdentification_no(patientData.getIdentification_no());
             }
-            return existingPatient;
+            return patientRepository.save(existingPatient);
         }
     }
     public void deletePatient(Long id){
