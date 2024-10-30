@@ -32,4 +32,36 @@ public class MedicalTreatmentService {
         }
     }
 
+    public MedicalTreatment updateMedicalTreatment(MedicalTreatment medicalTreatmentData, Long treatmentId){
+        Optional<MedicalTreatment> existingTreatmentOptional = medicalTreatmentRepository.findById(treatmentId);
+        if(!existingTreatmentOptional.isPresent()){
+            throw new IllegalArgumentException("Patient with ID "  + treatmentId + " does not exist.");
+        }else {
+            MedicalTreatment existingTreatment = existingTreatmentOptional.get();
+            if(medicalTreatmentData.getAppointmentDate() != null){
+                existingTreatment.setAppointmentDate(medicalTreatmentData.getAppointmentDate());
+            }
+            if(medicalTreatmentData.getBloodPressure() != null){
+                existingTreatment.setBloodPressure(medicalTreatmentData.getBloodPressure());
+            }
+            if(medicalTreatmentData.getGlucoseLevel() != null){
+                existingTreatment.setGlucoseLevel(medicalTreatmentData.getGlucoseLevel());
+            }
+            if(medicalTreatmentData.getHeight() != null){
+                existingTreatment.setHeight(medicalTreatmentData.getHeight());
+            }
+            if(medicalTreatmentData.getWeight() != null){
+                existingTreatment.setWeight(medicalTreatmentData.getWeight());
+            }
+            if(medicalTreatmentData.getHeartRate() != null){
+                existingTreatment.setHeartRate(medicalTreatmentData.getHeartRate());
+            }
+            if(medicalTreatmentData.getTreatedStatus() != null){
+                existingTreatment.setTreatedStatus(medicalTreatmentData.getTreatedStatus());
+            }
+
+            return medicalTreatmentRepository.save(existingTreatment);
+        }
+    }
+
 }

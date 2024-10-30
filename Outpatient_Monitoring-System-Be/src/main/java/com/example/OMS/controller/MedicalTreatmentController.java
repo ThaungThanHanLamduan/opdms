@@ -15,12 +15,20 @@ public class MedicalTreatmentController {
         this.medicalTreatmentService = medicalTreatmentService;
     }
 
-    @PostMapping("/{patientId}")
+    @PostMapping("/create/{patientId}")
     public ResponseEntity<MedicalTreatment> createMedicalRecord(@RequestBody MedicalTreatment medicalTreatment,
                                                                 @PathVariable Long patientId){
         MedicalTreatment createdMedicalTreatment = medicalTreatmentService.createMedicalTreatment(medicalTreatment,
                 patientId);
         return ResponseEntity.ok(createdMedicalTreatment);
+    }
+
+    @PatchMapping("/update/{treatmentId}")
+    public ResponseEntity<MedicalTreatment> updateMedicalRecord(@RequestBody MedicalTreatment medicalTreatment,
+                                                                @PathVariable Long treatmentId){
+        MedicalTreatment updatedMedicalTreatment = medicalTreatmentService.updateMedicalTreatment(medicalTreatment,
+                treatmentId);
+        return ResponseEntity.ok(updatedMedicalTreatment);
     }
 
 }
