@@ -7,6 +7,7 @@ import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,6 +20,16 @@ public class MedicalTreatmentService {
     public MedicalTreatmentService(MedicalTreatmentRepository medicalTreatmentRepository, PatientRepository patientRepository) {
         this.medicalTreatmentRepository = medicalTreatmentRepository;
         this.patientRepository = patientRepository;
+    }
+
+    public List<MedicalTreatment> getPatientMedicalTreatments(Long patientId){
+        Optional<Patient> patientOptional = patientRepository.findById(patientId);
+        if(!patientOptional.isPresent()){
+            throw new IllegalArgumentException("Patient with ID " + patientId + " is not found!");
+        }else{
+            Patient existingPatient = patientOptional.get();
+            return existingPatient.getMedicalTreatments();
+        }
     }
 
     public MedicalTreatment createMedicalTreatment(MedicalTreatment medicalTreatment, Long patientId){
@@ -64,4 +75,14 @@ public class MedicalTreatmentService {
         }
     }
 
+    public MedicalTreatment.TreatmentStatus getPatientTreatedStatus(Long patientId){
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if(!patientOpt.isPresent()){
+            throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
+        }else{
+            Patient existingPatient = patientOpt.get();
+            MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
+            return lastTreatment.getTreatedStatus();
+        }
+    }
 }

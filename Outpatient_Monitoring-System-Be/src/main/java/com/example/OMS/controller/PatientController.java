@@ -1,6 +1,8 @@
 package com.example.OMS.controller;
 
+import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
+import com.example.OMS.service.MedicalTreatmentService;
 import com.example.OMS.service.PatientService;
 import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
@@ -13,9 +15,11 @@ import java.util.List;
 @RequestMapping("/api/patients")
 public class PatientController {
     private final PatientService patientService;
+    private final MedicalTreatmentService medicalTreatmentService;
 
-    public PatientController(PatientService patientService) {
+    public PatientController(PatientService patientService, MedicalTreatmentService medicalTreatmentService) {
         this.patientService = patientService;
+        this.medicalTreatmentService = medicalTreatmentService;
     }
 
     @GetMapping()
@@ -29,6 +33,11 @@ public class PatientController {
         Patient patient = patientService.getPatient(id);
         return ResponseEntity.ok(patient);
     }
+
+//    @GetMapping("/treatedStatus/{id}")
+//    public ResponseEntity<MedicalTreatment.TreatmentStatus> getPatientTreatedStatus(@PathVariable Long id){
+//        MedicalTreatment.TreatmentStatus status =
+//    }
 
     @PostMapping("/create")
     public ResponseEntity<Patient> createPatient(@RequestBody Patient patient){

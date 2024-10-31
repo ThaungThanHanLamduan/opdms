@@ -6,6 +6,8 @@ import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/treatments")
 public class MedicalTreatmentController {
@@ -13,6 +15,11 @@ public class MedicalTreatmentController {
 
     public MedicalTreatmentController(MedicalTreatmentService medicalTreatmentService) {
         this.medicalTreatmentService = medicalTreatmentService;
+    }
+    @GetMapping("/{patientId}")
+    public ResponseEntity<List<MedicalTreatment>> getPatientMedicalRecords(@PathVariable Long patientId){
+        List<MedicalTreatment> patientMedicalTreatments = medicalTreatmentService.getPatientMedicalTreatments(patientId);
+        return ResponseEntity.ok(patientMedicalTreatments);
     }
 
     @PostMapping("/create/{patientId}")
