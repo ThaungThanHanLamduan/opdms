@@ -81,8 +81,29 @@ public class MedicalTreatmentService {
             throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
         }else{
             Patient existingPatient = patientOpt.get();
-            MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
-            return lastTreatment.getTreatedStatus();
+            List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
+            if(treatments.size() > 0){
+                MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
+                return lastTreatment.getTreatedStatus();
+            }else{
+                throw new IllegalArgumentException("This patient has no treatment history");
+            }
+        }
+    }
+
+    public void updatePatientTreatedStatus(MedicalTreatment.TreatmentStatus status, Long patientId){
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if(!patientOpt.isPresent()){
+            throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
+        }else{
+            Patient existingPatient = patientOpt.get();
+            List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
+            if(treatments.size() > 0){
+                MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
+                lastTreatment.setTreatedStatus(status);
+            }else{
+                throw new IllegalArgumentException("This patient has no treatment history");
+            }
         }
     }
 }
