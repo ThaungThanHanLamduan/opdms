@@ -18,7 +18,7 @@ public class PatientService {
     }
 
     public List<Patient> getAllPatients(){
-        return patientRepository.findAll();
+        return patientRepository.findAllByOrderByCreatedAtDesc();
     }
     public Patient getPatient(Long id){
         Optional<Patient> patientOptional = patientRepository.findById(id);

@@ -101,6 +101,8 @@ public class MedicalTreatmentService {
             if(treatments.size() > 0){
                 MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
                 lastTreatment.setTreatedStatus(status);
+                medicalTreatmentRepository.save(lastTreatment);
+                return;
             }else{
                 throw new IllegalArgumentException("This patient has no treatment history");
             }

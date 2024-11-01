@@ -2,12 +2,17 @@ package com.example.OMS.model;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Patient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +38,11 @@ public class Patient {
     private String identification_no;
     @Column(name = "nationality", nullable = false)
     private String nationality;
-
+    @CreatedDate
+    @Column(name="created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MedicalTreatment> medicalTreatments;
@@ -129,4 +138,25 @@ public class Patient {
     public List<MedicalTreatment> getMedicalTreatments() {
         return medicalTreatments;
     }
+
+    public LocalDateTime getUpdated_at() {
+        return updatedAt;
+    }
+
+    public void setUpdated_at(LocalDateTime updated_at) {
+        this.updatedAt = updated_at;
+    }
+
+    public void setMedicalTreatments(List<MedicalTreatment> medicalTreatments) {
+        this.medicalTreatments = medicalTreatments;
+    }
+
+    public LocalDateTime getCreated_at() {
+        return createdAt;
+    }
+
+    public void setCreated_at(LocalDateTime created_at) {
+        this.createdAt = created_at;
+    }
+
 }

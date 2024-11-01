@@ -2,6 +2,7 @@ package com.example.OMS.controller;
 
 import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
+import com.example.OMS.model.TreatmentStatusUpdateRequest;
 import com.example.OMS.service.MedicalTreatmentService;
 import com.example.OMS.service.PatientService;
 import org.apache.coyote.Response;
@@ -54,9 +55,11 @@ public class PatientController {
     }
 
     @PatchMapping("/update/treatedStatus/{patientId}")
-    public ResponseEntity<String> updatePatientTreatedStatus(@RequestBody MedicalTreatment.TreatmentStatus status,
+    public ResponseEntity<String> updatePatientTreatedStatus(@RequestBody TreatmentStatusUpdateRequest request,
                                                              @PathVariable Long patientId){
+        MedicalTreatment.TreatmentStatus status = request.getStatus();
         medicalTreatmentService.updatePatientTreatedStatus(status, patientId);
+
         return ResponseEntity.ok("Treated status has been updated for patient");
     }
     @DeleteMapping("/delete/{id}")
