@@ -3,12 +3,14 @@ import { CiMedicalCross } from "react-icons/ci";
 import { IoLogOutOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import profile from "@/public/images/doctor.webp";
+import { RiFileSearchLine } from "react-icons/ri";
 
 const Sidebar = () => {
   const router = useRouter();
+  const pathname = usePathname();
   const { logout } = useAuth();
 
   const handleLogout = () => {
@@ -23,13 +25,32 @@ const Sidebar = () => {
           <CiMedicalCross size={20} />
           <h2 className="font-noto text-white">OPD Monitoring System</h2>
         </div>
-
-        <Link href="/" passHref>
-          <button className="w-[200px] flex items-center gap-4 mx-3 px-4 py-3 bg-white/10 rounded-lg text-white">
-            <RxDashboard />
-            <span>Dashboard</span>
-          </button>
-        </Link>
+        <div className="flex flex-col gap-4">
+          <Link href="/" passHref>
+            <button
+              className={`w-[200px] flex items-center gap-4 mx-3 px-4 py-3 rounded-lg text-white ${
+                pathname === '/'
+                  ? 'bg-primartactive' 
+                  : 'bg-white/10' 
+              }`}
+            >
+              <RxDashboard />
+              <span>Dashboard</span>
+            </button>
+          </Link>
+          <Link href="/user-guide" passHref>
+            <button
+              className={`w-[200px] flex items-center gap-4 mx-3 px-4 py-3 rounded-lg text-white ${
+                pathname === '/user-guide'
+                  ? 'bg-primartactive' 
+                  : 'bg-white/10 '
+              }`}
+            >
+              <RiFileSearchLine />
+              <span>User Guide</span>
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="flex flex-col gap-2">
@@ -43,7 +64,7 @@ const Sidebar = () => {
         <hr className="opacity-20" />
         <div className="flex items-center gap-3 py-3">
           <Image src={profile} alt="Profile" className="w-12 h-12 rounded-full object-cover text-white" />
-          <p className="text-sm">Emma Watson</p>
+          <p className="text-sm text-white">Emma Watson</p>
         </div>
       </div>
     </div>
