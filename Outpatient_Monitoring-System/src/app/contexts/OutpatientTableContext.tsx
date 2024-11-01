@@ -1,6 +1,7 @@
 "use client";
 import { DropdownPatient, OutpatientTableTypes } from "@/types/patientTypes";
 import React, { createContext, useContext, useRef, useState } from "react";
+import { useGetAllPatients } from "../hooks/usePatientApi";
 
 const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
   undefined
@@ -9,6 +10,14 @@ const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
 export const OutpatientTableProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+
+  // database
+  const { data } = useGetAllPatients();
+
+  const patients = data?.data || []; 
+
+  
+
   // table header
   // Print Data
   const handlePrint = () => {
@@ -65,6 +74,7 @@ export const OutpatientTableProvider: React.FC<{
   return (
     <OutpatientTableContext.Provider
       value={{
+        patients,
         tableRef,
         handlePrint,
         currentPage,
