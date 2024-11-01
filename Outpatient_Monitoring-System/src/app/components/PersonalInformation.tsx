@@ -2,24 +2,25 @@ import { Patient } from "@/types/patientTypes";
 import React from "react";
 
 const patient: Patient = {
-  id: 10234,
   name: "Jane Cooper",
-  dob: "10/02/1999",
-  contact: "(225) 555-0118",
+  dateOfBirth: "10/02/1999",
+  contactNo: "(225) 555-0118",
   address: "456 Oak Avenue, Rivertown",
-  gender: "Female",
+  gender: 0,
   bloodType: "O",
   email: "jane@gmail.com",
+  identification_no: "",
+  nationality: ""
 };
 
 const personalInfoFields = [
-  { label: "Patient ID", value: patient.id },
+  { label: "Patient ID", value: patient.identification_no },
   { label: "Name", value: patient.name },
   { label: "Gender", value: patient.gender },
   { label: "Blood Type", value: patient.bloodType },
-  { label: "Date of Birth", value: patient.dob },
+  { label: "Date of Birth", value: patient.dateOfBirth },
   { label: "Email", value: patient.email },
-  { label: "Contact", value: patient.contact },
+  { label: "Contact", value: patient.contactNo },
 ];
 
 const PersonalInformation: React.FC = () => (

@@ -7,6 +7,7 @@ import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,16 @@ public class MedicalTreatmentService {
         this.patientRepository = patientRepository;
     }
 
+    public List<MedicalTreatment> getPatientMedicalTreatments(Long patientId){
+        Optional<Patient> patientOptional = patientRepository.findById(patientId);
+        if(!patientOptional.isPresent()){
+            throw new IllegalArgumentException("Patient with ID " + patientId + " is not found!");
+        }else{
+            Patient existingPatient = patientOptional.get();
+            return existingPatient.getMedicalTreatments();
+        }
+    }
+
     public MedicalTreatment createMedicalTreatment(MedicalTreatment medicalTreatment, Long patientId){
         Optional<Patient> patientOptional = patientRepository.findById(patientId);
         if(!patientOptional.isPresent()){
@@ -32,4 +43,67 @@ public class MedicalTreatmentService {
         }
     }
 
+    public MedicalTreatment updateMedicalTreatment(MedicalTreatment medicalTreatmentData, Long treatmentId){
+        Optional<MedicalTreatment> existingTreatmentOptional = medicalTreatmentRepository.findById(treatmentId);
+        if(!existingTreatmentOptional.isPresent()){
+            throw new IllegalArgumentException("Patient with ID "  + treatmentId + " does not exist.");
+        }else {
+            MedicalTreatment existingTreatment = existingTreatmentOptional.get();
+            if(medicalTreatmentData.getAppointmentDate() != null){
+                existingTreatment.setAppointmentDate(medicalTreatmentData.getAppointmentDate());
+            }
+            if(medicalTreatmentData.getBloodPressure() != null){
+                existingTreatment.setBloodPressure(medicalTreatmentData.getBloodPressure());
+            }
+            if(medicalTreatmentData.getGlucoseLevel() != null){
+                existingTreatment.setGlucoseLevel(medicalTreatmentData.getGlucoseLevel());
+            }
+            if(medicalTreatmentData.getHeight() != null){
+                existingTreatment.setHeight(medicalTreatmentData.getHeight());
+            }
+            if(medicalTreatmentData.getWeight() != null){
+                existingTreatment.setWeight(medicalTreatmentData.getWeight());
+            }
+            if(medicalTreatmentData.getHeartRate() != null){
+                existingTreatment.setHeartRate(medicalTreatmentData.getHeartRate());
+            }
+            if(medicalTreatmentData.getTreatedStatus() != null){
+                existingTreatment.setTreatedStatus(medicalTreatmentData.getTreatedStatus());
+            }
+
+            return medicalTreatmentRepository.save(existingTreatment);
+        }
+    }
+
+    public MedicalTreatment.TreatmentStatus getPatientTreatedStatus(Long patientId){
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if(!patientOpt.isPresent()){
+            throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
+        }else{
+            Patient existingPatient = patientOpt.get();
+            List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
+            if(treatments.size() > 0){
+                MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
+                return lastTreatment.getTreatedStatus();
+            }else{
+                throw new IllegalArgumentException("This patient has no treatment history");
+            }
+        }
+    }
+
+    public void updatePatientTreatedStatus(MedicalTreatment.TreatmentStatus status, Long patientId){
+        Optional<Patient> patientOpt = patientRepository.findById(patientId);
+        if(!patientOpt.isPresent()){
+            throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
+        }else{
+            Patient existingPatient = patientOpt.get();
+            List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
+            if(treatments.size() > 0){
+                MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
+                lastTreatment.setTreatedStatus(status);
+            }else{
+                throw new IllegalArgumentException("This patient has no treatment history");
+            }
+        }
+    }
 }

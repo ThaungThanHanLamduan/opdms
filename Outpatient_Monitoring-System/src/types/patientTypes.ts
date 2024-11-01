@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type StatCardProps = {
   icon: React.ElementType;
   title: string;
@@ -20,6 +21,7 @@ export type PaginationProps = {
 };
 
 export type OutpatientTableTypes = {
+  patients: any;
   tableRef: React.RefObject<HTMLDivElement>;
   handlePrint: () => void;
   currentPage: number;
@@ -42,15 +44,29 @@ export type PatientFormModalProps = {
   onSubmit: (patient: Patient) => void;
 };
 
+// export type Patient = {
+//   id: number;
+//   name: string;
+//   dob: string;
+//   gender: string;
+//   contact: string;
+//   bloodType: string;
+//   email: string;
+//   address: string;
+//   diagnosis?: string;
+//   treated?: boolean;
+// };
+
 export type Patient = {
-  id: number;
   name: string;
-  dob: string;
-  gender: string;
-  contact: string;
-  bloodType: string;
-  email: string;
+  dateOfBirth: string;
+  contactNo: string;
   address: string;
+  gender: number;
+  bloodType?: string;
+  email: string;
   diagnosis?: string;
-  treated?: boolean;
+  identification_no: string;
+  nationality: string;
+  medicalTreatments?: boolean;
 };
