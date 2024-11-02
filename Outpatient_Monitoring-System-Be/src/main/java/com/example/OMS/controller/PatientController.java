@@ -25,8 +25,10 @@ public class PatientController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Patient>> getAllPatients(){
-        List<Patient> allPatients = patientService.getAllPatients();
+    public ResponseEntity<List<Patient>> getAllPatients(@RequestParam(required = false) String name,
+                                                        @RequestParam(required = false) String id,
+                                                        @RequestParam(required = false) MedicalTreatment.TreatmentStatus treatedStatus){
+        List<Patient> allPatients = patientService.getAllPatients(name, id, treatedStatus);
         return ResponseEntity.ok(allPatients);
     }
 

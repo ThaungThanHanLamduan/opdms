@@ -1,5 +1,6 @@
 package com.example.OMS.service;
 
+import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
 import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +18,11 @@ public class PatientService {
         this.patientRepository = patientRepository;
     }
 
-    public List<Patient> getAllPatients(){
-        return patientRepository.findAllByOrderByCreatedAtDesc();
+    public List<Patient> getAllPatients(String name, String id, MedicalTreatment.TreatmentStatus treatedStatus){
+        if((name == null || name.isEmpty()) && (id == null || id.isEmpty()) && (treatedStatus == null || treatedStatus.describeConstable().isEmpty())){
+            return patientRepository.findAllByOrderByCreatedAtDesc();
+        }
+        return patientRepository.searchPatients(name, id, treatedStatus);
     }
     public Patient getPatient(Long id){
         Optional<Patient> patientOptional = patientRepository.findById(id);
