@@ -20,32 +20,36 @@ public class Patient {
 
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "dateOfBirth", nullable = false)
-    private LocalDate dateOfBirth;
-    @Column(name = "contactNo", nullable = false)
-    private String contactNo;
-    @Column(name = "address", nullable = false)
-    private String address;
-    @Column(name = "gender", nullable = false)
-    private Integer gender;
-    @Column(name = "bloodType", nullable = false)
-    private String bloodType;
-    @Column(name = "email", nullable = false)
-    private String email;
-    @Column(name = "diagnosis", nullable = false)
-    private String diagnosis;
-    @Column(name = "identification_no", nullable = false)
-    private String identification_no;
-    @Column(name = "nationality", nullable = false)
-    private String nationality;
-    @CreatedDate
-    @Column(name="created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-    @LastModifiedDate
-    private LocalDateTime updatedAt;
+
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "patient_details_id", referencedColumnName = "id")
+    private PatientDetails patientDetails;
+
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<MedicalTreatment> medicalTreatments;
+
+    @CreatedDate
+    @Column(name = "created_at", nullable = false, updatable = false)
+    private LocalDateTime createdAt;
+    @LastModifiedDate
+    private LocalDateTime updatedAt;
+
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
 
     public Long getId() {
         return id;
@@ -63,100 +67,19 @@ public class Patient {
         this.name = name;
     }
 
-    public LocalDate getDateOfBirth() {
-        return dateOfBirth;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
-    }
-
-    public String getContactNo() {
-        return contactNo;
-    }
-
-    public void setContactNo(String contactNo) {
-        this.contactNo = contactNo;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public Integer getGender() {
-        return gender;
-    }
-
-    public void setGender(Integer gender) {
-        this.gender = gender;
-    }
-
-    public String getBloodType() {
-        return bloodType;
-    }
-
-    public void setBloodType(String bloodType) {
-        this.bloodType = bloodType;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getDiagnosis() {
-        return diagnosis;
-    }
-
-    public void setDiagnosis(String diagnosis) {
-        this.diagnosis = diagnosis;
-    }
-
-    public String getIdentification_no() {
-        return identification_no;
-    }
-
-    public void setIdentification_no(String identification_no) {
-        this.identification_no = identification_no;
-    }
-
-    public String getNationality() {
-        return nationality;
-    }
-
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
     public List<MedicalTreatment> getMedicalTreatments() {
         return medicalTreatments;
-    }
-
-    public LocalDateTime getUpdated_at() {
-        return updatedAt;
-    }
-
-    public void setUpdated_at(LocalDateTime updated_at) {
-        this.updatedAt = updated_at;
     }
 
     public void setMedicalTreatments(List<MedicalTreatment> medicalTreatments) {
         this.medicalTreatments = medicalTreatments;
     }
 
-    public LocalDateTime getCreated_at() {
-        return createdAt;
+    public PatientDetails getPatientDetails() {
+        return patientDetails;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.createdAt = created_at;
+    public void setPatientDetails(PatientDetails patientDetails) {
+        this.patientDetails = patientDetails;
     }
-
 }

@@ -1,122 +1,128 @@
 [
   {
-    "name": "John Doe",
-    "dateOfBirth": "1980-01-15",
-    "contactNo": "+66612345678",
-    "address": "456 Oak Avenue, Rivertown",
-    "gender": 0,
-    "bloodType": "AB",
-    "email": "johndoe123@gmail.com",
-    "diagnosis": "Diabetes",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
-  },
-  {
     "name": "Jane Smith",
-    "dateOfBirth": "1992-03-22",
-    "contactNo": "+66687654321",
-    "address": "789 Pine Street, Lakeside",
-    "gender": 1,
-    "bloodType": "O",
-    "email": "janesmith92@mail.com",
-    "diagnosis": "Hypertension",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1992-03-22",
+      "contactNo": "+66687654321",
+      "address": "789 Pine Street, Lakeside",
+      "gender": 1,
+      "bloodType": "O",
+      "email": "janesmith92@mail.com",
+      "diagnosis": "Hypertension",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Samuel Brown",
-    "dateOfBirth": "1975-07-19",
-    "contactNo": "+66623456789",
-    "address": "123 Maple Road, Greentown",
-    "gender": 0,
-    "bloodType": "B",
-    "email": "samuel.brown75@mail.com",
-    "diagnosis": "Asthma",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1975-07-19",
+      "contactNo": "+66623456789",
+      "address": "123 Maple Road, Greentown",
+      "gender": 0,
+      "bloodType": "B",
+      "email": "samuel.brown75@mail.com",
+      "diagnosis": "Asthma",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Emma Wilson",
-    "dateOfBirth": "1985-09-12",
-    "contactNo": "+66634567890",
-    "address": "456 Cedar Lane, Hilltop",
-    "gender": 1,
-    "bloodType": "A",
-    "email": "emma.wilson85@mail.com",
-    "diagnosis": "Allergy",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1985-09-12",
+      "contactNo": "+66634567890",
+      "address": "456 Cedar Lane, Hilltop",
+      "gender": 1,
+      "bloodType": "A",
+      "email": "emma.wilson85@mail.com",
+      "diagnosis": "Allergy",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Michael Johnson",
-    "dateOfBirth": "1990-02-28",
-    "contactNo": "+66665432123",
-    "address": "321 Birch Street, Woodville",
-    "gender": 0,
-    "bloodType": "AB",
-    "email": "m.johnson90@mail.com",
-    "diagnosis": "Chronic Pain",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1990-02-28",
+      "contactNo": "+66665432123",
+      "address": "321 Birch Street, Woodville",
+      "gender": 0,
+      "bloodType": "AB",
+      "email": "m.johnson90@mail.com",
+      "diagnosis": "Chronic Pain",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Olivia Taylor",
-    "dateOfBirth": "1978-06-05",
-    "contactNo": "+66645678901",
-    "address": "987 Elm Avenue, Riverdale",
-    "gender": 1,
-    "bloodType": "O",
-    "email": "olivia.taylor78@mail.com",
-    "diagnosis": "Heart Disease",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1978-06-05",
+      "contactNo": "+66645678901",
+      "address": "987 Elm Avenue, Riverdale",
+      "gender": 1,
+      "bloodType": "O",
+      "email": "olivia.taylor78@mail.com",
+      "diagnosis": "Heart Disease",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "William Davis",
-    "dateOfBirth": "1983-11-30",
-    "contactNo": "+66656789012",
-    "address": "654 Spruce Road, Harborview",
-    "gender": 0,
-    "bloodType": "B",
-    "email": "will.davis83@mail.com",
-    "diagnosis": "Diabetes",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1983-11-30",
+      "contactNo": "+66656789012",
+      "address": "654 Spruce Road, Harborview",
+      "gender": 0,
+      "bloodType": "B",
+      "email": "will.davis83@mail.com",
+      "diagnosis": "Diabetes",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Sophia Martinez",
-    "dateOfBirth": "1995-08-17",
-    "contactNo": "+66667890123",
-    "address": "432 Chestnut Street, Lakeside",
-    "gender": 1,
-    "bloodType": "A",
-    "email": "sophia.martinez95@mail.com",
-    "diagnosis": "Migraine",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1995-08-17",
+      "contactNo": "+66667890123",
+      "address": "432 Chestnut Street, Lakeside",
+      "gender": 1,
+      "bloodType": "A",
+      "email": "sophia.martinez95@mail.com",
+      "diagnosis": "Migraine",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "James Anderson",
-    "dateOfBirth": "1987-04-03",
-    "contactNo": "+66678901234",
-    "address": "321 Walnut Lane, Rivertown",
-    "gender": 0,
-    "bloodType": "AB",
-    "email": "james.anderson87@mail.com",
-    "diagnosis": "Asthma",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1987-04-03",
+      "contactNo": "+66678901234",
+      "address": "321 Walnut Lane, Rivertown",
+      "gender": 0,
+      "bloodType": "AB",
+      "email": "james.anderson87@mail.com",
+      "diagnosis": "Asthma",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   },
   {
     "name": "Isabella Thomas",
-    "dateOfBirth": "1981-12-15",
-    "contactNo": "+66689012345",
-    "address": "654 Willow Road, Greenfield",
-    "gender": 1,
-    "bloodType": "O",
-    "email": "isabella.thomas81@mail.com",
-    "diagnosis": "Hypertension",
-    "identification_no": "ABC21231",
-    "nationality": "Thai"
+    "patientDetails": {
+      "dateOfBirth": "1981-12-15",
+      "contactNo": "+66689012345",
+      "address": "654 Willow Road, Greenfield",
+      "gender": 1,
+      "bloodType": "O",
+      "email": "isabella.thomas81@mail.com",
+      "diagnosis": "Hypertension",
+      "identification_no": "ABC21231",
+      "nationality": "Thai"
+    }
   }
 ]

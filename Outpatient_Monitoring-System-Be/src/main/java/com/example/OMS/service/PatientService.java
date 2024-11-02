@@ -50,29 +50,29 @@ public class PatientService {
             if(patientData.getName() != null){
                 existingPatient.setName(patientData.getName());
             }
-            if(patientData.getDateOfBirth() != null){
-                existingPatient.setDateOfBirth(patientData.getDateOfBirth());
+            if(patientData.getPatientDetails().getDateOfBirth() != null){
+                existingPatient.getPatientDetails().setDateOfBirth(patientData.getPatientDetails().getDateOfBirth());
             }
-            if(patientData.getAddress() != null){
-                existingPatient.setAddress(patientData.getAddress());
+            if(patientData.getPatientDetails().getAddress() != null){
+                existingPatient.getPatientDetails().setAddress(patientData.getPatientDetails().getAddress());
             }
-            if(patientData.getBloodType() != null){
-                existingPatient.setBloodType(patientData.getBloodType());
+            if(patientData.getPatientDetails().getBloodType() != null){
+                existingPatient.getPatientDetails().setBloodType(patientData.getPatientDetails().getBloodType());
             }
-            if(patientData.getContactNo() != null){
-                existingPatient.setContactNo(patientData.getContactNo());
+            if(patientData.getPatientDetails().getContactNo() != null){
+                existingPatient.getPatientDetails().setContactNo(patientData.getPatientDetails().getContactNo());
             }
-            if(patientData.getDiagnosis() != null){
-                existingPatient.setDiagnosis(patientData.getDiagnosis());
+            if(patientData.getPatientDetails().getDiagnosis() != null){
+                existingPatient.getPatientDetails().setDiagnosis(patientData.getPatientDetails().getDiagnosis());
             }
-            if(patientData.getEmail() != null){
-                existingPatient.setEmail(patientData.getEmail());
+            if(patientData.getPatientDetails().getEmail() != null){
+                existingPatient.getPatientDetails().setEmail(patientData.getPatientDetails().getEmail());
             }
-            if(patientData.getGender() != null){
-                existingPatient.setGender(patientData.getGender());
+            if(patientData.getPatientDetails().getGender() != null){
+                existingPatient.getPatientDetails().setGender(patientData.getPatientDetails().getGender());
             }
-            if(patientData.getIdentification_no() != null){
-                existingPatient.setIdentification_no(patientData.getIdentification_no());
+            if(patientData.getPatientDetails().getIdentification_no() != null){
+                existingPatient.getPatientDetails().setIdentification_no(patientData.getPatientDetails().getIdentification_no());
             }
             return patientRepository.save(existingPatient);
         }

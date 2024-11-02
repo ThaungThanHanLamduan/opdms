@@ -53,20 +53,20 @@ public class MedicalTreatmentService {
             if(medicalTreatmentData.getAppointmentDate() != null){
                 existingTreatment.setAppointmentDate(medicalTreatmentData.getAppointmentDate());
             }
-            if(medicalTreatmentData.getBloodPressure() != null){
-                existingTreatment.setBloodPressure(medicalTreatmentData.getBloodPressure());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getBloodPressure() != null){
+                existingTreatment.getMedicalTreatmentDetails().setBloodPressure(medicalTreatmentData.getMedicalTreatmentDetails().getBloodPressure());
             }
-            if(medicalTreatmentData.getGlucoseLevel() != null){
-                existingTreatment.setGlucoseLevel(medicalTreatmentData.getGlucoseLevel());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getGlucoseLevel() != null){
+                existingTreatment.getMedicalTreatmentDetails().setGlucoseLevel(medicalTreatmentData.getMedicalTreatmentDetails().getGlucoseLevel());
             }
-            if(medicalTreatmentData.getHeight() != null){
-                existingTreatment.setHeight(medicalTreatmentData.getHeight());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getHeight() != null){
+                existingTreatment.getMedicalTreatmentDetails().setHeight(medicalTreatmentData.getMedicalTreatmentDetails().getHeight());
             }
-            if(medicalTreatmentData.getWeight() != null){
-                existingTreatment.setWeight(medicalTreatmentData.getWeight());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getWeight() != null){
+                existingTreatment.getMedicalTreatmentDetails().setWeight(medicalTreatmentData.getMedicalTreatmentDetails().getWeight());
             }
-            if(medicalTreatmentData.getHeartRate() != null){
-                existingTreatment.setHeartRate(medicalTreatmentData.getHeartRate());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate() != null){
+                existingTreatment.getMedicalTreatmentDetails().setHeartRate(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate());
             }
             if(medicalTreatmentData.getTreatedStatus() != null){
                 existingTreatment.setTreatedStatus(medicalTreatmentData.getTreatedStatus());
