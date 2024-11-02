@@ -4,6 +4,9 @@ import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
 import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,11 +21,13 @@ public class PatientService {
         this.patientRepository = patientRepository;
     }
 
-    public List<Patient> getAllPatients(String name, String id, MedicalTreatment.TreatmentStatus treatedStatus){
+    public Page<Patient> getAllPatients(String name, String id, MedicalTreatment.TreatmentStatus treatedStatus,
+                                        String page){
+        Pageable pageable = PageRequest.of(Integer.parseInt(page), 10);
         if((name == null || name.isEmpty()) && (id == null || id.isEmpty()) && (treatedStatus == null || treatedStatus.describeConstable().isEmpty())){
-            return patientRepository.findAllByOrderByCreatedAtDesc();
+            return patientRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
-        return patientRepository.searchPatients(name, id, treatedStatus);
+        return patientRepository.searchPatients(name, id, treatedStatus, pageable);
     }
     public Patient getPatient(Long id){
         Optional<Patient> patientOptional = patientRepository.findById(id);

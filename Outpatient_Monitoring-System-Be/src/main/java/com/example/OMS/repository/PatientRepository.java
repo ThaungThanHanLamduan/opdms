@@ -2,14 +2,15 @@ package com.example.OMS.repository;
 
 import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 public interface PatientRepository extends JpaRepository<Patient, Long> {
-    List<Patient> findAllByOrderByCreatedAtDesc();
+    Page<Patient> findAllByOrderByCreatedAtDesc(Pageable Pageable);
 
     @Query("SELECT p FROM Patient p " +
             "LEFT JOIN p.medicalTreatments mt " +
@@ -18,7 +19,8 @@ public interface PatientRepository extends JpaRepository<Patient, Long> {
             "AND (:id IS NULL OR p.id = :id) " +
             "AND (:treatedStatus IS NULL OR mt.treatedStatus = :treatedStatus)"
     )
-    List<Patient> searchPatients(@Param("name") String name,
+    Page<Patient> searchPatients(@Param("name") String name,
                                  @Param("id") String id,
-                                 @Param("treatedStatus") MedicalTreatment.TreatmentStatus treatedStatus);
+                                 @Param("treatedStatus") MedicalTreatment.TreatmentStatus treatedStatus,
+                                 Pageable pageable);
 }

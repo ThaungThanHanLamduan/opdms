@@ -7,6 +7,7 @@ import com.example.OMS.model.TreatmentStatusUpdateRequest;
 import com.example.OMS.service.MedicalTreatmentService;
 import com.example.OMS.service.PatientService;
 import org.apache.coyote.Response;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,10 +27,11 @@ public class PatientController {
     }
 
     @GetMapping()
-    public ResponseEntity<List<Patient>> getAllPatients(@RequestParam(required = false) String name,
+    public ResponseEntity<Page<Patient>> getAllPatients(@RequestParam(required = false) String name,
                                                         @RequestParam(required = false) String id,
-                                                        @RequestParam(required = false) MedicalTreatment.TreatmentStatus treatedStatus){
-        List<Patient> allPatients = patientService.getAllPatients(name, id, treatedStatus);
+                                                        @RequestParam(required = false) MedicalTreatment.TreatmentStatus treatedStatus,
+                                                        @RequestParam(required=false, defaultValue = "0") String page){
+        Page<Patient> allPatients = patientService.getAllPatients(name, id, treatedStatus, page);
         return ResponseEntity.ok(allPatients);
     }
 
