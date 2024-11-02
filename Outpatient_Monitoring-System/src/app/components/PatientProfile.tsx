@@ -2,7 +2,7 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import PatientProfilePic from "@/public/images/patient.png";
-import TreatmentStatus from "./TreatmentStatus";
+// import TreatmentStatus from "./TreatmentStatus";
 import { MdVerified } from "react-icons/md";
 import { RxCrossCircled } from "react-icons/rx";
 import { usePatientDetail } from "../contexts/PatientDetailContext";

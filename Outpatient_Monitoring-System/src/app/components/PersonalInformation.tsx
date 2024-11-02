@@ -1,4 +1,3 @@
-import { Patient } from "@/types/patientTypes";
 import React from "react";
 import { usePatientDetail } from "../contexts/PatientDetailContext";
 
@@ -21,7 +20,7 @@ const PersonalInformation: React.FC = () => {
       <hr className="border-t border-slate-300 w-full my-4" />
 
       <div className="grid grid-cols-6 gap-x-3 gap-y-2">
-        {personalInfoFields.map(({ label, value }, index) => (
+        {personalInfoFields.map(({ label, value }) => (
           <React.Fragment key={label}>
             <span className="font-medium col-span-1 text-sm">{label}</span>
             <span className="text-center col-span-1">:</span>

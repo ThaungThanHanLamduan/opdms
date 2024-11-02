@@ -5,7 +5,6 @@ import MedicalTreatmentModal from "@/app/components/MedicalTreatmentModal";
 import PatientProfile from "@/app/components/PatientProfile";
 import PersonalInformation from "@/app/components/PersonalInformation";
 import { PatientDetailProvider } from "@/app/contexts/PatientDetailContext";
-import { useGetSinglePatient } from "@/app/hooks/usePatientApi";
 import React, { useState } from "react";
 import { TiPlus } from "react-icons/ti";
 
