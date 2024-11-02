@@ -1,5 +1,6 @@
 package com.example.OMS.service;
 
+import com.example.OMS.model.GetDiagnosisCountResponse;
 import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
 import com.example.OMS.repository.PatientRepository;
@@ -9,8 +10,11 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PatientService {
@@ -84,5 +88,25 @@ public class PatientService {
         }else{
             patientRepository.deleteById(id);
         }
+    }
+
+    public List<GetDiagnosisCountResponse> getDiagnosisCount(){
+        List<Patient> patients = patientRepository.findAll();
+
+        Map<String, Integer> diagnosisMap = new HashMap<>();
+
+        for(Patient patient : patients){
+            String diagnosis = patient.getPatientDetails().getDiagnosis();
+            diagnosisMap.put(diagnosis, diagnosisMap.getOrDefault(diagnosis, 0) + 1);
+        }
+
+        return diagnosisMap.entrySet().stream()
+                .map(entry -> {
+                    GetDiagnosisCountResponse response = new GetDiagnosisCountResponse();
+                    response.setDiagnosisName(entry.getKey());
+                    response.setCount(entry.getValue());
+                    return response;
+                })
+                .collect(Collectors.toList());
     }
 }

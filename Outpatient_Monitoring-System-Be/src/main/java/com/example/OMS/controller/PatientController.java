@@ -1,9 +1,6 @@
 package com.example.OMS.controller;
 
-import com.example.OMS.model.GetTreatmentStatusResponse;
-import com.example.OMS.model.MedicalTreatment;
-import com.example.OMS.model.Patient;
-import com.example.OMS.model.TreatmentStatusUpdateRequest;
+import com.example.OMS.model.*;
 import com.example.OMS.service.MedicalTreatmentService;
 import com.example.OMS.service.PatientService;
 import org.apache.coyote.Response;
@@ -47,6 +44,16 @@ public class PatientController {
         return ResponseEntity.ok(response);
     }
 
+    @GetMapping("/diagnosis_count")
+    public ResponseEntity<List<GetDiagnosisCountResponse>> getDiagnosisCount(){
+        List<GetDiagnosisCountResponse> response = patientService.getDiagnosisCount();
+        return ResponseEntity.ok(response);
+    }
+    @GetMapping("/treatment_count")
+    public ResponseEntity<List<GetTreatedStatusCountResponse>> getTreatedStatusCount(){
+        List<GetTreatedStatusCountResponse> response = medicalTreatmentService.getTreatedStatusCount();
+        return ResponseEntity.ok(response);
+    }
     @PostMapping("/create")
     public ResponseEntity<Patient> createPatient(@RequestBody Patient patient){
         Patient newPatient = patientService.createPatient(patient);

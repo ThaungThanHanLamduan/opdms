@@ -1,15 +1,16 @@
 package com.example.OMS.service;
 
-import com.example.OMS.model.GetTreatmentStatusResponse;
-import com.example.OMS.model.MedicalTreatment;
-import com.example.OMS.model.Patient;
+import com.example.OMS.model.*;
 import com.example.OMS.repository.MedicalTreatmentRepository;
 import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicalTreatmentService {
@@ -113,5 +114,23 @@ public class MedicalTreatmentService {
                 throw new IllegalArgumentException("This patient doesn't have medical treatment history.");
             }
         }
+    }
+
+    public List<GetTreatedStatusCountResponse> getTreatedStatusCount(){
+        List<MedicalTreatment> treatments = medicalTreatmentRepository.findAll();
+        Map<MedicalTreatment.TreatmentStatus, Integer> treatmentMap = new HashMap<>();
+
+        for(MedicalTreatment treatment : treatments){
+            MedicalTreatment.TreatmentStatus treatedStatus = treatment.getTreatedStatus();
+            treatmentMap.put(treatedStatus, treatmentMap.getOrDefault(treatment, 0) + 1);
+        }
+
+        return treatmentMap.entrySet().stream()
+                .map(treatment-> {
+                    GetTreatedStatusCountResponse getTreatedStatusCount = new GetTreatedStatusCountResponse();
+                    getTreatedStatusCount.setTreatedStatus(treatment.getKey());
+                    getTreatedStatusCount.setCount(treatment.getValue());
+                    return getTreatedStatusCount;
+                }).collect(Collectors.toList());
     }
 }
