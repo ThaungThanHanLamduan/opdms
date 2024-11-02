@@ -88,7 +88,7 @@ export const OutpatientTableProvider: React.FC<{
         selectedTitle,
         toggleDropdown,
         handleSelect,
-        stats
+        stats,
       }}
     >
       {children}
