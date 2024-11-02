@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useCreatePatient } from "../hooks/usePatientApi";
+import { useCreatePatient, useGetAllPatients } from "../hooks/usePatientApi";
 import { PatientFormModalProps, Patient } from "@/types/patientTypes";
 import Select, { SingleValue } from "react-select";
 
@@ -9,6 +9,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   onClose,
 }) => {
   const createPatientMutation = useCreatePatient();
+  const {refetch} = useGetAllPatients();
 
   const nationalityOptions = [
     { value: "", label: "Select Nationality" },
@@ -73,6 +74,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
     createPatientMutation.mutate(formData, {
       onSuccess: () => {
         console.log(formData);
+        refetch();
         onClose();
       },
       onError: (error) => {
