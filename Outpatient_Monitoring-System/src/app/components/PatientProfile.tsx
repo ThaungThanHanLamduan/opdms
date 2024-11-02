@@ -5,9 +5,11 @@ import PatientProfilePic from "@/public/images/patient.png";
 import TreatmentStatus from "./TreatmentStatus";
 import { MdVerified } from "react-icons/md";
 import { RxCrossCircled } from "react-icons/rx";
+import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 
 const PatientProfile: React.FC = () => {
+    const {patient} = usePatientDetail();
     const [istreated, isSetTreated] = useState(true);
     console.log(isSetTreated);
     
@@ -21,14 +23,14 @@ const PatientProfile: React.FC = () => {
             alt="Patient Profile"
           />
           <div className="flex flex-col gap-2">
-            <p className="text-xl">Jane Cooper</p>
-            <TreatmentStatus />
+            <p className="text-xl">{patient.name}</p>
+            {/* <TreatmentStatus /> */}
           </div>
         </div>
         <div className="flex justify-between w-full items-center">
           <p className="text-lg">Treatment</p>
           <p>:</p>
-          <p className="text-lg">Diabetes</p>
+          <p className="text-lg">{patient.diagnosis}</p>
         </div>
         {istreated ?  <div className="border-green-700 border flex w-full justify-between items-center gap-6 px-4 py-2 rounded">
           <MdVerified color="green" size="40" />
