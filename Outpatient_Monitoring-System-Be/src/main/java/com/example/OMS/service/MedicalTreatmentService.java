@@ -1,5 +1,6 @@
 package com.example.OMS.service;
 
+import com.example.OMS.model.GetTreatmentStatusResponse;
 import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
 import com.example.OMS.repository.MedicalTreatmentRepository;
@@ -75,7 +76,7 @@ public class MedicalTreatmentService {
         }
     }
 
-    public MedicalTreatment.TreatmentStatus getPatientTreatedStatus(Long patientId){
+    public GetTreatmentStatusResponse getPatientTreatedStatus(Long patientId){
         Optional<Patient> patientOpt = patientRepository.findById(patientId);
         if(!patientOpt.isPresent()){
             throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
@@ -84,9 +85,15 @@ public class MedicalTreatmentService {
             List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
             if(treatments.size() > 0){
                 MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
-                return lastTreatment.getTreatedStatus();
+                GetTreatmentStatusResponse response = new GetTreatmentStatusResponse();
+                response.setStatus(lastTreatment.getTreatedStatus() + "");
+                response.setAppointmentDate(lastTreatment.getAppointmentDate() + "");
+                return response;
             }else{
-                throw new IllegalArgumentException("This patient has no treatment history");
+                GetTreatmentStatusResponse response = new GetTreatmentStatusResponse();
+                response.setAppointmentDate("");
+                response.setStatus("");
+                return response;
             }
         }
     }
@@ -102,9 +109,8 @@ public class MedicalTreatmentService {
                 MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
                 lastTreatment.setTreatedStatus(status);
                 medicalTreatmentRepository.save(lastTreatment);
-                return;
             }else{
-                throw new IllegalArgumentException("This patient has no treatment history");
+                throw new IllegalArgumentException("This patient doesn't have medical treatment history.");
             }
         }
     }

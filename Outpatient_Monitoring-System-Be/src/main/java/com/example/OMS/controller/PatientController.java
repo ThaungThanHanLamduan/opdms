@@ -1,5 +1,6 @@
 package com.example.OMS.controller;
 
+import com.example.OMS.model.GetTreatmentStatusResponse;
 import com.example.OMS.model.MedicalTreatment;
 import com.example.OMS.model.Patient;
 import com.example.OMS.model.TreatmentStatusUpdateRequest;
@@ -39,9 +40,9 @@ public class PatientController {
     }
 
     @GetMapping("/treatedStatus/{patientId}")
-    public ResponseEntity<MedicalTreatment.TreatmentStatus> getPatientTreatedStatus(@PathVariable Long patientId){
-        MedicalTreatment.TreatmentStatus status = medicalTreatmentService.getPatientTreatedStatus(patientId);
-        return ResponseEntity.ok(status);
+    public ResponseEntity<GetTreatmentStatusResponse> getPatientTreatedStatus(@PathVariable Long patientId){
+        GetTreatmentStatusResponse response = medicalTreatmentService.getPatientTreatedStatus(patientId);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/create")
