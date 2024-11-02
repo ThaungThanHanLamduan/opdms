@@ -1,6 +1,9 @@
 import { BaseURL } from "@/service/ApiEndpoint";
+import { getToken } from "@/service/authService";
 import { Patient } from "@/types/patientTypes";
 import axios from "axios";
+
+const token = getToken();
 
 export const getAllPatients =  async () => {
     try {
@@ -13,7 +16,22 @@ export const getAllPatients =  async () => {
 
         return response;
     } catch (error) {
-        console.log(error);
+        console.error(error);
+    }
+}
+
+export const getSinglePatient = async ({id}:{id : number}) => {
+    try {
+        const response = await axios.get(`${BaseURL}/api/patients/${id}`,{
+            headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            }
+        })
+
+        return response
+    } catch (error) {
+        console.error(error);
     }
 }
 
@@ -21,6 +39,7 @@ export const createPatient = async (patientData: Patient) => {
     try {
         const response = await axios.post(`${BaseURL}/api/patients/create`, patientData, {
             headers: {
+                Authorization: `Bearer ${token}`,
                 Accept: "application/json",
                 "Content-Type": "application/json",
             },
@@ -30,3 +49,34 @@ export const createPatient = async (patientData: Patient) => {
         console.error(error);
     }
 };
+
+export const updatePatient = async (patientData: Patient) => {
+    try {
+        const response = await axios.patch(`${BaseURL}/api/patients/update/${patientData.id}`, patientData, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                Accept: "application/json",
+                "Content-Type": "application/json",
+            },
+        });
+        return response;
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export const deletePatient = async (patientId: number) => {
+    try {
+      const response = await axios.delete(`${BaseURL}/api/patients/delete/${patientId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return response;
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  

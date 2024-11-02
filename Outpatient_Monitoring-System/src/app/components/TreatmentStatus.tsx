@@ -2,15 +2,19 @@
 import React, { useState } from "react";
 import { BsCheck, BsX } from "react-icons/bs";
 
-const TreatmentStatus: React.FC = () => {
+interface TreatmentStatusProps {
+  patientStatus: boolean;
+}
+
+const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientStatus }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState(true); 
+  const [status, setStatus] = useState(patientStatus);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleSelect = (selectedStatus: boolean) => {
     setStatus(selectedStatus);
-    setIsOpen(false); 
+    setIsOpen(false);
   };
 
   return (
@@ -22,8 +26,7 @@ const TreatmentStatus: React.FC = () => {
           status ? "bg-green-100" : "bg-red-100"
         }`}
       >
-       
-          {status ? <BsCheck color="green" size="20px" /> : <BsX color="red" size="20px" />}
+        {status ? <BsCheck color="green" size="20px" /> : <BsX color="red" size="20px" />}
         <span
           className={`text-sm font-medium ${
             status ? "text-green-600" : "text-red-600"

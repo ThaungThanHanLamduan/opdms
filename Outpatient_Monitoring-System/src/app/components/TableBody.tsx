@@ -34,7 +34,7 @@ const TableBody: React.FC = () => {
                 </Link>
               </td>
               <td className="py-2 pl-3">
-                <TreatmentStatus />
+                <TreatmentStatus patientStatus = {patient.medicalTreatments} />
               </td>
             </tr>
           ))}

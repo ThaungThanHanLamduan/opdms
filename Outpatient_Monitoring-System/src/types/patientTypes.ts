@@ -58,6 +58,7 @@ export type PatientFormModalProps = {
 // };
 
 export type Patient = {
+  id?: number;
   name: string;
   dateOfBirth: string;
   contactNo: string;
