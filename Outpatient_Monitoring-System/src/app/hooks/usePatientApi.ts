@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "react-query"
-import { createPatient, deletePatient, getAllPatients, getSinglePatient, updatePatient } from "../api/patientApi"
+import { createPatient, deletePatient, getAllPatients, getSinglePatient, getTreatmentStatus, updatePatient, updateTreatmentStatus } from "../api/patientApi"
 import { Patient } from "@/types/patientTypes"
 
 export const useGetAllPatients = () => {
@@ -32,4 +32,23 @@ export const useDeletePatient = () => {
     return useMutation({
         mutationFn: (patientId : number) => deletePatient(patientId)
     })
-} 
+}
+
+export const useGetTreatmentStatus = (patientId: number) => {
+    return useQuery({
+        queryKey: ['treatmentStatus', patientId],
+        queryFn: () => getTreatmentStatus(patientId)
+    })
+}
+
+export const useUpdateTreatmentStatus = () => {
+    return useMutation({
+        mutationFn: ({
+            patientId,
+            treatedStatus
+          }: {
+            patientId: number;
+            treatedStatus: string;
+          }) => updateTreatmentStatus({patientId, treatedStatus})
+    })
+}

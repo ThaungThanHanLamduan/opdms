@@ -1,4 +1,6 @@
+import { Treatment } from "@/types/treatmentTypes";
 import React, { useState } from "react";
+import { useCreateTreatment } from "../hooks/useTreatmentApi";
 
 interface ModalProps {
   isOpen: boolean;
@@ -6,33 +8,42 @@ interface ModalProps {
 }
 
 const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
+
+  const createTreatmentMutation = useCreateTreatment();
+
   const [treatmentStatus, setTreatmentStatus] = useState<string>("Pending");
-  const [formData, setFormData] = useState({
+  
+  const [formData, setFormData] = useState<Treatment>({
     appointment: "",
-    heartRate: "",
-    bloodPressure: "",
-    temperature: "",
-    glucose: "",
-    height: "",
-    weight: "",
+    heartRate: 0,
+    bloodPressure: 0,
+    bodyTemperature: 0,
+    glucoseLevel: 0,
+    height: 0,
+    weight: 0,
   });
+  
   const [showValidation, setShowValidation] = useState(false);
 
   const isFormValid =
     treatmentStatus !== "Treated" ||
-    Object.values(formData).every((value) => value.trim() !== "");
+    Object.values(formData).every((value) => value !== "");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleConfirm = () => {
-    if (!isFormValid) {
-      setShowValidation(true);
-    } else {
-      console.log("Form Data Submitted:", formData); // Debug: See submitted data in console
-      onClose();
-    }
+  const handleSubmit = async (e : React.FormEvent) => {
+    e.preventDefault();
+    createTreatmentMutation.mutate(formData,{
+      onSuccess: () => {
+        console.log(formData);
+        onClose();
+      },
+      onError: () => {
+        setShowValidation(true);
+      }
+    })
   };
 
   if (!isOpen) return null;
@@ -41,7 +52,7 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
     <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center">
       <div className="bg-white rounded-lg shadow-lg p-6 w-96">
         <h3 className="text-xl mb-4">Add Medical Treatment</h3>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div>
               <label>Appointment</label>
@@ -92,11 +103,11 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="temperature"
-                value={formData.temperature}
+                value={formData.bodyTemperature}
                 onChange={handleChange}
                 placeholder="Temperature"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.temperature
+                  showValidation && treatmentStatus === "Treated" && !formData.bodyTemperature
                     ? "border-red-500"
                     : ""
                 }`}
@@ -107,11 +118,11 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="glucose"
-                value={formData.glucose}
+                value={formData.glucoseLevel}
                 onChange={handleChange}
                 placeholder="Glucose Level"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.glucose
+                  showValidation && treatmentStatus === "Treated" && !formData.glucoseLevel
                     ? "border-red-500"
                     : ""
                 }`}
@@ -171,11 +182,10 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
 
           <div className="flex justify-end gap-2">
             <button
-              type="button"
+              type="submit"
               className={`px-4 py-2 rounded ${
                 isFormValid ? "bg-primary text-white" : "bg-gray-300 text-black cursor-not-allowed"
               }`}
-              onClick={handleConfirm}
             >
               Confirm
             </button>
