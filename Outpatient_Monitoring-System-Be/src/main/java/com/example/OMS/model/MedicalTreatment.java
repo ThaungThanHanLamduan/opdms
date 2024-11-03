@@ -32,7 +32,8 @@ public class MedicalTreatment {
     public enum TreatmentStatus {
         PENDING,
         TREATED,
-        UNTREATED
+        UNTREATED,
+        TOTAL
     }
 
     public Long getId() {

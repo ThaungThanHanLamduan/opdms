@@ -118,19 +118,34 @@ public class MedicalTreatmentService {
 
     public List<GetTreatedStatusCountResponse> getTreatedStatusCount(){
         List<MedicalTreatment> treatments = medicalTreatmentRepository.findAll();
-        Map<MedicalTreatment.TreatmentStatus, Integer> treatmentMap = new HashMap<>();
 
-        for(MedicalTreatment treatment : treatments){
-            MedicalTreatment.TreatmentStatus treatedStatus = treatment.getTreatedStatus();
-            treatmentMap.put(treatedStatus, treatmentMap.getOrDefault(treatment, 0) + 1);
+        Map<MedicalTreatment.TreatmentStatus, Integer> treatmentMap = new HashMap<>();
+        for (MedicalTreatment.TreatmentStatus status : MedicalTreatment.TreatmentStatus.values()) {
+            if(status != MedicalTreatment.TreatmentStatus.TOTAL){
+                treatmentMap.put(status, 0);
+            }
         }
 
-        return treatmentMap.entrySet().stream()
-                .map(treatment-> {
-                    GetTreatedStatusCountResponse getTreatedStatusCount = new GetTreatedStatusCountResponse();
-                    getTreatedStatusCount.setTreatedStatus(treatment.getKey());
-                    getTreatedStatusCount.setCount(treatment.getValue());
-                    return getTreatedStatusCount;
+        Integer totalTreatmentsCount = treatments.size();
+
+        for (MedicalTreatment treatment : treatments) {
+            MedicalTreatment.TreatmentStatus treatedStatus = treatment.getTreatedStatus();
+            treatmentMap.put(treatedStatus, treatmentMap.get(treatedStatus) + 1);
+        }
+
+        List<GetTreatedStatusCountResponse> statusCountResponses = treatmentMap.entrySet().stream()
+                .map(entry -> {
+                    GetTreatedStatusCountResponse response = new GetTreatedStatusCountResponse();
+                    response.setTreatedStatus(entry.getKey());
+                    response.setCount(entry.getValue());
+                    return response;
                 }).collect(Collectors.toList());
+
+        GetTreatedStatusCountResponse totalResponse = new GetTreatedStatusCountResponse();
+        totalResponse.setTreatedStatus(MedicalTreatment.TreatmentStatus.TOTAL);
+        totalResponse.setCount(totalTreatmentsCount);
+        statusCountResponses.add(totalResponse);
+
+        return statusCountResponses;
     }
 }
