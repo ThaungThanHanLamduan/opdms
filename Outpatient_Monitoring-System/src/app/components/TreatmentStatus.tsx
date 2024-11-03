@@ -3,41 +3,45 @@ import React, { useEffect, useState } from "react";
 import { BsCheck, BsX } from "react-icons/bs";
 import { CgSandClock } from "react-icons/cg";
 import { useGetTreatmentStatus, useUpdateTreatmentStatus } from "../hooks/usePatientApi";
+import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 interface TreatmentStatusProps {
   patientID: number;
 }
 
 const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
-  const { data , refetch} = useGetTreatmentStatus(patientID);
+  const { data } = useGetTreatmentStatus(patientID);
+  const { treatmentRefetch, refetchPatients } = useOutpatientTable();
   const updateTreatmentStatusMutation = useUpdateTreatmentStatus();
-  const patientStatus = data?.data || "PENDING";
+  const patientStatus = data?.data?.status || "PENDING";
 
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<string>("PENDING");
 
-  useEffect(()=>{
-    setStatus(patientStatus)
-  },[patientStatus])
-
+  useEffect(() => {
+    setStatus(patientStatus);
+  }, [patientStatus]);
 
   const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleSelect = (selectedStatus: string) => {
-    updateTreatmentStatusMutation.mutate({
-      patientId : patientID,
-      treatedStatus: selectedStatus
-    },{
-      onSuccess: () => {
-        setStatus(selectedStatus);
-        refetch();
-        setIsOpen(false);
+    updateTreatmentStatusMutation.mutate(
+      {
+        patientId: patientID,
+        treatedStatus: selectedStatus,
       },
-      onError: () => {
-        setIsOpen(false);
+      {
+        onSuccess: () => {
+          setStatus(selectedStatus);
+          treatmentRefetch();
+          refetchPatients();
+          setIsOpen(false);
+        },
+        onError: () => {
+          setIsOpen(false);
+        },
       }
-    })
-  
+    );
   };
 
   const generateStatus = (status: string) => {

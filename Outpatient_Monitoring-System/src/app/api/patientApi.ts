@@ -5,9 +5,32 @@ import axios from "axios";
 
 const token = getToken();
 
-export const getAllPatients = async () => {
+export const getAllPatients = async (
+  name?: string,
+  id?: number,
+  treatedStatus?: string,
+  pageNumber? :number
+) => {
   try {
-    const response = await axios.get(`${BaseURL}/api/patients`, {
+    let queryString = "";
+
+    if (name) {
+      queryString += `?name=${name}`;
+    }
+
+    if (id) {
+      queryString += (queryString ? "&" : "?") + `id=${id}`;
+    }
+
+    if (treatedStatus) {
+      queryString += (queryString ? "&" : "?") + `treatedStatus=${treatedStatus}`;
+    }
+
+    if(pageNumber) {
+      queryString += (queryString ? "&" : "?") + `pageNumber=${pageNumber}`
+    }
+
+    const response = await axios.get(`${BaseURL}/api/patients${queryString}`, {
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
@@ -113,7 +136,7 @@ export const getTreatmentStatus = async (patientId: number) => {
 
 export const updateTreatmentStatus = async ({
   patientId,
-  treatedStatus
+  treatedStatus,
 }: {
   patientId: number;
   treatedStatus: string;
@@ -121,9 +144,45 @@ export const updateTreatmentStatus = async ({
   try {
     const response = await axios.patch(
       `${BaseURL}/api/patients/update/treatedStatus/${patientId}`,
-        {
-            status:treatedStatus
+      {
+        status: treatedStatus,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
         },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getTreatmentCount = async () => {
+  try {
+    const response = await axios.get(
+      `${BaseURL}/api/patients/treatment_count`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+export const getDiagnosisCount = async () => {
+  try {
+    const response = await axios.get(
+      `${BaseURL}/api/patients/diagnosis_count`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

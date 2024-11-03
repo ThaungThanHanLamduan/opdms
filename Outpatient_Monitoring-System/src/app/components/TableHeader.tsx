@@ -1,14 +1,13 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { FaPlus } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { MdOutlineFileDownload } from "react-icons/md";
 import Dropdownbar from "./Dropdownbar";
 import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 import PatientFormModal from "./PatientFormModal";
-import { useState } from "react";
-import { Patient } from "@/types/patientTypes";
 
+// HeaderButton component with optional onClick, icon, label, and rounded props
 const HeaderButton: React.FC<{
   onClick?: () => void;
   icon?: React.ReactNode;
@@ -17,7 +16,7 @@ const HeaderButton: React.FC<{
 }> = ({ onClick, icon, label, rounded = false }) => (
   <button
     onClick={onClick}
-    className={`bg-primary hover:bg-primaryhover active:bg-primartactive  text-white flex items-center gap-2 px-4 py-1 ${
+    className={`bg-primary hover:bg-primaryhover active:bg-primaryactive text-white flex items-center gap-2 px-4 py-1 ${
       rounded ? "rounded-full px-3" : "rounded"
     }`}
   >
@@ -27,16 +26,20 @@ const HeaderButton: React.FC<{
 );
 
 const TableHeader = () => {
-  const { handlePrint, openModal, closeModal, isModalOpen, selectedTitle } =
-    useOutpatientTable();
+  const {
+    handlePrint,
+    openModal,
+    closeModal,
+    isModalOpen,
+    selectedTitle,
+    searchTerm,
+    setSearchTerm,
+    handleSearch,
+  } = useOutpatientTable();
 
-  const [patients, setPatients] = useState<Patient[]>([]);
-  console.log(patients);
-
-  const handleAddPatient = (patient: Patient) => {
-    setPatients((prev) => [...prev, patient]);
-    console.log("Added patient:", patient);
-    closeModal();
+  // Function to handle search input change
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -55,14 +58,16 @@ const TableHeader = () => {
             label="Add Patient"
             rounded
           />
-
           <div className="relative">
             <input
               type="text"
               className="w-[200px] border px-4 py-1 rounded text-gray-600"
               placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <FiSearch
+              onClick={handleSearch}
               className="absolute top-2 right-2 text-slate-400"
               size="15px"
             />
@@ -73,7 +78,9 @@ const TableHeader = () => {
       <PatientFormModal
         isOpen={isModalOpen}
         onClose={closeModal}
-        onSubmit={handleAddPatient}
+        onSubmit={() => {
+          closeModal(); // Only close modal on submit
+        }}
       />
     </>
   );
