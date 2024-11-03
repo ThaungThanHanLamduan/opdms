@@ -19,7 +19,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className="w-[300px] h-screen bg-primary flex flex-col justify-between px-3 py-10">
+    <div className="w-1/6 h-screen bg-primary flex flex-col justify-between px-3 py-10">
       <div className="flex flex-col gap-10">
         <div className="flex items-center gap-3 font-semibold">
           <CiMedicalCross size={20} />

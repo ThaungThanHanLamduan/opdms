@@ -7,11 +7,11 @@ const PersonalInformation: React.FC = () => {
   const personalInfoFields = [
     { label: "Patient ID", value: patient.id },
     { label: "Name", value: patient.name },
-    { label: "Gender", value: patient.gender == 0 ? "Male" : "Female" },
-    { label: "Blood Type", value: patient.bloodType },
-    { label: "Date of Birth", value: patient.dateOfBirth },
-    { label: "Nationality", value: patient.nationality },
-    { label: "Contact", value: patient.contactNo },
+    { label: "Gender", value: patient.patientDetails.gender == 0 ? "Male" : "Female" },
+    { label: "Blood Type", value: patient.patientDetails.bloodType },
+    { label: "Date of Birth", value: patient.patientDetails.dateOfBirth },
+    { label: "Nationality", value: patient.patientDetails.nationality },
+    { label: "Contact", value: patient.patientDetails.contactNo },
   ];
 
   return (
@@ -32,12 +32,12 @@ const PersonalInformation: React.FC = () => {
       <div className="grid grid-cols-6 gap-x-3 mt-2">
         <span className="font-medium col-span-1 text-sm">Email</span>
         <span className="text-center col-span-1">:</span>
-        <span className="col-span-4 text-sm">{patient.email || "N/A"}</span>
+        <span className="col-span-4 text-sm">{patient.patientDetails.email || "N/A"}</span>
       </div>
       <div className="grid grid-cols-6 gap-x-3 mt-2">
         <span className="font-medium col-span-1 text-sm">Address</span>
         <span className="text-center col-span-1">:</span>
-        <span className="col-span-4 text-sm">{patient.address || "N/A"}</span>
+        <span className="col-span-4 text-sm">{patient.patientDetails.address || "N/A"}</span>
       </div>
     </div>
   );

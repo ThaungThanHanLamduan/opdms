@@ -24,7 +24,7 @@ const Dropdownbar: React.FC = () => {
           {stats.map((stat, index) => (
             <div
               key={index}
-              onClick={() => handleSelect(stat.title)} 
+              onClick={() => handleSelect(stat.title, stat.value)} 
               className="flex items-center gap-3 px-4 py-2 hover:bg-gray-100 cursor-pointer"
             >
               <p className="text-sm text-gray-400">{stat.title}</p>
