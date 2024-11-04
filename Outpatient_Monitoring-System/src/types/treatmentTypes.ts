@@ -1,11 +1,13 @@
 export type Treatment = {
-    appointment : string,
-    bloodPressure : number,
-    glucoseLevel : number,
-    heartRate : number,
-    weight: number,
-    height: number,
-    bodyTemperature : number,
-    status? : boolean,
-    patientId? : number
-}
+  appointmentDate: string;
+  patientId?: number;
+  treatedStatus: string;
+  medicalTreatmentDetails: {
+    bloodPressure: string;
+    glucoseLevel: number;
+    heartRate: number;
+    weight: number;
+    height: number;
+    bodyTemperature: number;
+  };
+};

@@ -16,11 +16,11 @@ export const useGetAllPatients = (
   name?: string,
   id?: number,
   treatedStatus?: string,
-  pageNumber?: number
+  page?: number
 ) => {
   return useQuery(
-    ["allPatients", name, id, treatedStatus, pageNumber],
-    () => getAllPatients(name, id, treatedStatus, pageNumber),
+    ["allPatients", name, id, treatedStatus, page],
+    () => getAllPatients(name, id, treatedStatus, page),
     {
       keepPreviousData: true,
     }
