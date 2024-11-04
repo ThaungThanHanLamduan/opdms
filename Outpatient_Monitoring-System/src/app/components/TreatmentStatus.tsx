@@ -7,22 +7,26 @@ import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 interface TreatmentStatusProps {
   patientID: number;
+  isOpen?: boolean;  // Optional for controlled mode
+  onToggle?: () => void; // Optional for controlled mode
 }
 
-const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
+const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID, isOpen: controlledIsOpen, onToggle }) => {
   const { data, refetch } = useGetTreatmentStatus(patientID);
   const { treatmentRefetch, refetchPatients } = useOutpatientTable();
   const updateTreatmentStatusMutation = useUpdateTreatmentStatus();
   const patientStatus = data?.data?.status || "PENDING";
 
+  // Internal state for uncontrolled mode
   const [isOpen, setIsOpen] = useState(false);
   const [status, setStatus] = useState<string>(patientStatus);
+
+  // Determine if the component is in controlled mode or uncontrolled mode
+  const isControlled = controlledIsOpen !== undefined && onToggle !== undefined;
 
   useEffect(() => {
     setStatus(patientStatus);
   }, [patientStatus]);
-
-  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
   const handleSelect = (selectedStatus: string) => {
     updateTreatmentStatusMutation.mutate(
@@ -33,44 +37,41 @@ const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
       {
         onSuccess: () => {
           setStatus(selectedStatus);
-          refetch();  // Refetch treatment status
+          refetch();
           treatmentRefetch();
           refetchPatients();
-          setIsOpen(false);
+          if (!isControlled) {
+            setIsOpen(false);
+          } else {
+            onToggle(); // Close dropdown in controlled mode
+          }
         },
         onError: () => {
-          setIsOpen(false);
+          if (!isControlled) {
+            setIsOpen(false);
+          }
         },
       }
     );
   };
 
+  const toggleDropdown = () => {
+    if (isControlled) {
+      onToggle(); // Call external toggle function
+    } else {
+      setIsOpen((prev) => !prev); // Use internal state
+    }
+  };
+
   const generateStatus = (status: string) => {
     switch (status) {
       case "TREATED":
-        return {
-          buttonClass: "bg-green-100",
-          buttonIcon: <BsCheck color="green" size="20px" />,
-          buttonText: "text-green-600",
-        };
+        return { buttonClass: "bg-green-100", buttonIcon: <BsCheck color="green" size="20px" />, buttonText: "text-green-600" };
       case "UNTREATED":
-        return {
-          buttonClass: "bg-red-100",
-          buttonIcon: <BsX color="red" size="20px" />,
-          buttonText: "text-red-600",
-        };
+        return { buttonClass: "bg-red-100", buttonIcon: <BsX color="red" size="20px" />, buttonText: "text-red-600" };
       case "PENDING":
-        return {
-          buttonClass: "bg-orange-100",
-          buttonIcon: <CgSandClock color="orange" size="16px" />,
-          buttonText: "text-orange-600",
-        };
       default:
-        return {
-          buttonClass: "bg-orange-100",
-          buttonIcon: <CgSandClock color="orange" size="16px" />,
-          buttonText: "text-orange-600",
-        };
+        return { buttonClass: "bg-orange-100", buttonIcon: <CgSandClock color="orange" size="16px" />, buttonText: "text-orange-600" };
     }
   };
 
@@ -78,9 +79,7 @@ const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
     <div className="relative w-[120px]">
       <button
         onClick={toggleDropdown}
-        className={`flex items-center justify-between w-full px-5 py-2 rounded-lg border ${
-          generateStatus(status).buttonClass
-        }`}
+        className={`flex items-center justify-between w-full px-5 py-2 rounded-lg border ${generateStatus(status).buttonClass}`}
       >
         <span>{generateStatus(status).buttonIcon}</span>
         <span className={`text-sm font-medium ${generateStatus(status).buttonText}`}>
@@ -89,25 +88,16 @@ const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
       </button>
 
       {/* Dropdown options */}
-      {isOpen && (
+      {(isControlled ? controlledIsOpen : isOpen) && (
         <div className="absolute top-full mt-2 w-full bg-white border rounded-lg shadow-lg z-10">
           <div className="flex flex-col p-2 gap-2">
-            <p
-              onClick={() => handleSelect("TREATED")}
-              className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer"
-            >
+            <p onClick={() => handleSelect("TREATED")} className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer">
               Treated
             </p>
-            <p
-              onClick={() => handleSelect("UNTREATED")}
-              className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer"
-            >
+            <p onClick={() => handleSelect("UNTREATED")} className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer">
               Untreated
             </p>
-            <p
-              onClick={() => handleSelect("PENDING")}
-              className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer"
-            >
+            <p onClick={() => handleSelect("PENDING")} className="text-sm text-gray-600 hover:bg-gray-100 px-2 py-1 rounded cursor-pointer">
               Pending
             </p>
           </div>

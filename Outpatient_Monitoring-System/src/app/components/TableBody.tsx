@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { FaEye } from "react-icons/fa6";
 import TreatmentStatus from "./TreatmentStatus";
@@ -7,6 +7,12 @@ import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 const TableBody: React.FC = () => {
   const { tableRef, patients } = useOutpatientTable();
+
+  const [openPatientID, setOpenPatientID] = useState<number | null>(null);
+
+  const toggleDropdown = (patientID: number) => {
+    setOpenPatientID((prevID) => (prevID === patientID ? null : patientID));
+  };
 
   return (
     <div ref={tableRef}>
@@ -34,9 +40,13 @@ const TableBody: React.FC = () => {
               <tr className="border-b" key={patient.id}>
                 <td className="py-2 px-4">{patient.id}</td>
                 <td className="py-2 px-4">{patient.name}</td>
-                <td className="py-2 px-4">{patient.patientDetails.contactNo}</td>
+                <td className="py-2 px-4">
+                  {patient.patientDetails.contactNo}
+                </td>
                 <td className="py-2 px-4">{patient.patientDetails.email}</td>
-                <td className="py-2 px-4">{patient.patientDetails.diagnosis}</td>
+                <td className="py-2 px-4">
+                  {patient.patientDetails.diagnosis}
+                </td>
                 <td className="py-2 pl-8">
                   <Link
                     href={`/patients/${patient.id}`}
@@ -46,7 +56,11 @@ const TableBody: React.FC = () => {
                   </Link>
                 </td>
                 <td className="py-2 pl-3">
-                  <TreatmentStatus patientID={patient.id} />
+                  <TreatmentStatus
+                    patientID={patient.id}
+                    isOpen={openPatientID === patient.id}
+                    onToggle={() => toggleDropdown(patient.id)}
+                  />
                 </td>
               </tr>
             ))}
