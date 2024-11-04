@@ -1,54 +1,70 @@
-import { useMutation, useQuery } from "react-query"
-import { createPatient, deletePatient, getAllPatients, getSinglePatient, getTreatmentStatus, updatePatient, updateTreatmentStatus } from "../api/patientApi"
-import { Patient } from "@/types/patientTypes"
+import { useMutation, useQuery } from "react-query";
+import {
+  createPatient,
+  deletePatient,
+  getAllPatients,
+  getDiagnosisCount,
+  getSinglePatient,
+  getTreatmentCount,
+  getTreatmentStatus,
+  updatePatient,
+  updateTreatmentStatus,
+} from "../api/patientApi";
+import { Patient } from "@/types/patientTypes";
 
-export const useGetAllPatients = () => {
-    return useQuery({
-        queryKey: ["allPatients"],
-        queryFn: () => getAllPatients()
-    })
-}
+export const useGetAllPatients = (
+  name?: string,
+  id?: number,
+  treatedStatus?: string,
+  page?: number
+) => {
+  return useQuery(
+    ["allPatients", name, id, treatedStatus, page],
+    () => getAllPatients(name, id, treatedStatus, page),
+    {
+      keepPreviousData: true,
+    }
+  );
+};
 
 export const useGetSinglePatient = (id: number) => {
-    return useQuery({
-        queryKey: ["singlePatient",id],
-        queryFn: () => getSinglePatient({id})
-    })
-}
+  return useQuery(["singlePatient", id], () => getSinglePatient({ id }));
+};
 
 export const useCreatePatient = () => {
-    return useMutation({
-        mutationFn: (patientData : Patient) => createPatient(patientData)
-    })
-}
+  return useMutation((patientData: Patient) => createPatient(patientData));
+};
 
 export const useUpdatePatient = () => {
-    return useMutation({
-        mutationFn: (patientData : Patient) => updatePatient(patientData)
-    })
-} 
+  return useMutation((patientData: Patient) => updatePatient(patientData));
+};
 
 export const useDeletePatient = () => {
-    return useMutation({
-        mutationFn: (patientId : number) => deletePatient(patientId)
-    })
-}
+  return useMutation((patientId: number) => deletePatient(patientId));
+};
 
 export const useGetTreatmentStatus = (patientId: number) => {
-    return useQuery({
-        queryKey: ['treatmentStatus', patientId],
-        queryFn: () => getTreatmentStatus(patientId)
-    })
-}
+  return useQuery(["treatmentStatus", patientId], () =>
+    getTreatmentStatus(patientId)
+  );
+};
 
 export const useUpdateTreatmentStatus = () => {
-    return useMutation({
-        mutationFn: ({
-            patientId,
-            treatedStatus
-          }: {
-            patientId: number;
-            treatedStatus: string;
-          }) => updateTreatmentStatus({patientId, treatedStatus})
-    })
-}
+  return useMutation(
+    ({
+      patientId,
+      treatedStatus,
+    }: {
+      patientId: number;
+      treatedStatus: string;
+    }) => updateTreatmentStatus({ patientId, treatedStatus })
+  );
+};
+
+export const useGetTreatmentCount = () => {
+  return useQuery(["treatmentCount"], () => getTreatmentCount());
+};
+
+export const useGetDiagnosisCount = () => {
+  return useQuery(["diagnosisCount"], () => getDiagnosisCount());
+};

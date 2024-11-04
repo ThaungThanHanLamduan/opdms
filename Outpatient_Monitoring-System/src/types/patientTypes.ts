@@ -1,4 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+
+import { AxiosResponse } from "axios";
+import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "react-query";
+
 export type StatCardProps = {
   icon: React.ElementType;
   title: string;
@@ -12,6 +16,7 @@ export type PatientDiagnose = {
 
 export type DropdownPatient = {
   title: string;
+  value: string
 };
 
 export type PaginationProps = {
@@ -22,6 +27,7 @@ export type PaginationProps = {
 
 export type OutpatientTableTypes = {
   patients: any;
+  filteredPatients: () => void;
   tableRef: React.RefObject<HTMLDivElement>;
   handlePrint: () => void;
   currentPage: number;
@@ -33,9 +39,15 @@ export type OutpatientTableTypes = {
   closeModal: () => void;
   isOpen: boolean;
   selectedTitle: string;
-  toggleDropdown: () => void
-  handleSelect: (title : string) => void;
-  stats :  DropdownPatient[]
+  toggleDropdown: () => void;
+  handleSelect: (title: string , value: string) => void;
+  stats: DropdownPatient[];
+  searchTerm: string;
+  setSearchTerm: (term: string) => void;
+  handleSearch: () => void;
+  refetchPatients: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult<AxiosResponse<any, any> | undefined, unknown>>;
+  treatmentCount : any,
+  treatmentRefetch: any
 };
 
 export type PatientFormModalProps = {
@@ -44,30 +56,19 @@ export type PatientFormModalProps = {
   onSubmit: (patient: Patient) => void;
 };
 
-// export type Patient = {
-//   id: number;
-//   name: string;
-//   dob: string;
-//   gender: string;
-//   contact: string;
-//   bloodType: string;
-//   email: string;
-//   address: string;
-//   diagnosis?: string;
-//   treated?: boolean;
-// };
-
 export type Patient = {
   id?: number;
   name: string;
-  dateOfBirth: string;
-  contactNo: string;
-  address: string;
-  gender: number;
-  bloodType?: string;
-  email: string;
-  diagnosis?: string;
-  identification_no: string;
-  nationality: string;
-  medicalTreatments?: boolean;
+  patientDetails: {
+    dateOfBirth: string;
+    contactNo: string;
+    address: string;
+    gender: number;
+    bloodType?: string;
+    email?: string;
+    diagnosis?: string;
+    identification_no?: string;
+    nationality?: string;
+    medicalTreatments?: boolean;
+  };
 };
