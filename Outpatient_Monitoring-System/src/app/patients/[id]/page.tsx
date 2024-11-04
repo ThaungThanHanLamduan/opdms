@@ -43,7 +43,7 @@ const Patients: React.FC<PatientsPageProps> = ({params}) => {
         </div>
       </div>
       <MedicalTreatementTable patientId={id} />
-      <DiagnosisChart />
+      <DiagnosisChart  patientId={id} />
       <MedicalTreatmentModal isOpen={isModalOpen} onClose={toggleModal} patientId={id} />
     </div>
     </PatientDetailProvider>

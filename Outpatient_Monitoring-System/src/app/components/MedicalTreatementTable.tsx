@@ -37,7 +37,6 @@ interface TableProps {
 const MedicalTreatmentTable: React.FC<TableProps> = ({patientId}) => {
 
   const {data} = useGetTreatment(patientId);
-  console.log(data);
 
   const medicalTreatments = data?.data || [];
   
