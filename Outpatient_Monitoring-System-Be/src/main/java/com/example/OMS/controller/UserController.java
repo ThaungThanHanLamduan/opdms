@@ -24,8 +24,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user){
-        User loggedUser = userService.login(user);
-        return ResponseEntity.ok(loggedUser);
+    public ResponseEntity<String> login(@RequestBody User user){
+        String token = userService.login(user);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token){
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        userService.logout(token);
+        return ResponseEntity.ok("You have been logged out successfully.");
     }
 }

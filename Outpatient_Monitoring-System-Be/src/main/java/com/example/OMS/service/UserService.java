@@ -3,6 +3,9 @@ package com.example.OMS.service;
 import com.example.OMS.model.User;
 import com.example.OMS.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -11,13 +14,18 @@ import java.util.Optional;
 @Service
 public class UserService {
     @Autowired
+    AuthenticationManager authenticationManager;
+    @Autowired
     private final UserRepository userRepository;
     @Autowired
     private final PasswordEncoder passwordEncoder;
+    @Autowired
+    private final JWTService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder){
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JWTService jwtService){
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtService = jwtService;
     }
 
     public User signup(User user){
@@ -30,17 +38,18 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User login(User user){
-        Optional<User> existingUser = userRepository.findUserByUsername(user.getUsername())
-                .or(() -> userRepository.findUserByEmail(user.getEmail()));
-        if(!existingUser.isPresent()){
-            throw new IllegalArgumentException("User does not exist.");
-        }
+    public String login(User user){
+        Authentication authentication = authenticationManager
+                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
-        if(passwordEncoder.matches(user.getPassword(), existingUser.get().getPassword())){
-            return existingUser.get();
-        }else {
-            throw new IllegalArgumentException("Invalid username or password");
+        if(authentication.isAuthenticated()){
+            return jwtService.generateJWTToken(user.getUsername());
         }
+        return "Fail to login.";
+    }
+
+    public String logout(String token){
+        jwtService.blacklistToken(token);
+        return "Logged out!";
     }
 }
