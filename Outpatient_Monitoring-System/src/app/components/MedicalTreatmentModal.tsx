@@ -5,45 +5,73 @@ import { useCreateTreatment } from "../hooks/useTreatmentApi";
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  patientId: number; // Assuming patientId is passed as a prop
 }
 
-const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
-
+const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose, patientId }) => {
   const createTreatmentMutation = useCreateTreatment();
 
+  // Set default treatedStatus to "Pending"
   const [treatmentStatus, setTreatmentStatus] = useState<string>("Pending");
-  
+
   const [formData, setFormData] = useState<Treatment>({
-    appointment: "",
-    heartRate: 0,
-    bloodPressure: 0,
-    bodyTemperature: 0,
-    glucoseLevel: 0,
-    height: 0,
-    weight: 0,
+    appointmentDate: "",
+    treatedStatus: "PENDING", // Set default treatedStatus in formData
+    medicalTreatmentDetails: {
+      bloodPressure: "N/A",
+      glucoseLevel: 0,
+      heartRate: 0,
+      weight: 0,
+      height: 0,
+      bodyTemperature: 0,
+    },
+    patientId: patientId, // Include patient ID
   });
-  
+
   const [showValidation, setShowValidation] = useState(false);
 
   const isFormValid =
     treatmentStatus !== "Treated" ||
     Object.values(formData).every((value) => value !== "");
 
+  // Handle input change for all fields except treatedStatus
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name in formData.medicalTreatmentDetails) {
+      setFormData((prev) => ({
+        ...prev,
+        medicalTreatmentDetails: {
+          ...prev.medicalTreatmentDetails,
+          [name]: value,
+        },
+      }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
-  const handleSubmit = async (e : React.FormEvent) => {
+  // Handle change specifically for treatedStatus
+  const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newStatus = e.target.value;
+    setTreatmentStatus(newStatus);
+    setFormData((prev) => ({ ...prev, treatedStatus: newStatus }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    createTreatmentMutation.mutate(formData,{
-      onSuccess: () => {
-        console.log(formData);
-        onClose();
-      },
-      onError: () => {
-        setShowValidation(true);
-      }
-    })
+    if (isFormValid) {
+      createTreatmentMutation.mutate(formData, {
+        onSuccess: () => {
+          console.log("Treatment Data:", formData);
+          onClose();
+        },
+        onError: () => {
+          setShowValidation(true);
+        },
+      });
+    } else {
+      setShowValidation(true);
+    }
   };
 
   if (!isOpen) return null;
@@ -58,11 +86,13 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <label>Appointment</label>
               <input
                 type="date"
-                name="appointment"
-                value={formData.appointment}
+                name="appointmentDate"
+                value={formData.appointmentDate}
                 onChange={handleChange}
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.appointment
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.appointmentDate
                     ? "border-red-500"
                     : ""
                 }`}
@@ -73,11 +103,13 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="heartRate"
-                value={formData.heartRate}
+                value={formData.medicalTreatmentDetails.heartRate}
                 onChange={handleChange}
                 placeholder="Heart Rate"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.heartRate
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.heartRate
                     ? "border-red-500"
                     : ""
                 }`}
@@ -88,11 +120,13 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="bloodPressure"
-                value={formData.bloodPressure}
+                value={formData.medicalTreatmentDetails.bloodPressure}
                 onChange={handleChange}
                 placeholder="Blood Pressure"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.bloodPressure
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.bloodPressure
                     ? "border-red-500"
                     : ""
                 }`}
@@ -102,12 +136,14 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <label>Body Temperature (F)</label>
               <input
                 type="text"
-                name="temperature"
-                value={formData.bodyTemperature}
+                name="bodyTemperature"
+                value={formData.medicalTreatmentDetails.bodyTemperature}
                 onChange={handleChange}
-                placeholder="Temperature"
+                placeholder="Body Temperature"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.bodyTemperature
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.bodyTemperature
                     ? "border-red-500"
                     : ""
                 }`}
@@ -117,12 +153,14 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <label>Glucose Level</label>
               <input
                 type="text"
-                name="glucose"
-                value={formData.glucoseLevel}
+                name="glucoseLevel"
+                value={formData.medicalTreatmentDetails.glucoseLevel}
                 onChange={handleChange}
                 placeholder="Glucose Level"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.glucoseLevel
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.glucoseLevel
                     ? "border-red-500"
                     : ""
                 }`}
@@ -133,11 +171,13 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="height"
-                value={formData.height}
+                value={formData.medicalTreatmentDetails.height}
                 onChange={handleChange}
                 placeholder="Height"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.height
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.height
                     ? "border-red-500"
                     : ""
                 }`}
@@ -148,11 +188,13 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <input
                 type="text"
                 name="weight"
-                value={formData.weight}
+                value={formData.medicalTreatmentDetails.weight}
                 onChange={handleChange}
                 placeholder="Weight"
                 className={`border rounded p-2 w-full ${
-                  showValidation && treatmentStatus === "Treated" && !formData.weight
+                  showValidation &&
+                  treatmentStatus === "Treated" &&
+                  !formData.medicalTreatmentDetails.weight
                     ? "border-red-500"
                     : ""
                 }`}
@@ -162,29 +204,29 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
               <label>Treatment Status</label>
               <select
                 value={treatmentStatus}
-                onChange={(e) => {
-                  setTreatmentStatus(e.target.value);
-                  setShowValidation(false);
-                }}
+                onChange={handleStatusChange} // Updated to handleStatusChange
                 className="border rounded p-2 w-full"
               >
-                <option value="Pending">Pending</option>
-                <option value="Treated">Treated</option>
-                <option value="Untreated">Untreated</option>
+                <option value="PENDING">Pending</option>
+                <option value="TREATED">Treated</option>
+                <option value="UNTREATED">Untreated</option>
               </select>
             </div>
           </div>
 
           {showValidation && treatmentStatus === "Treated" && (
-            <p className="text-red-500 mb-4">Please fill all fields for Treated status.</p>
+            <p className="text-red-500 mb-4">
+              Please fill all fields for Treated status.
+            </p>
           )}
-
 
           <div className="flex justify-end gap-2">
             <button
               type="submit"
               className={`px-4 py-2 rounded ${
-                isFormValid ? "bg-primary text-white" : "bg-gray-300 text-black cursor-not-allowed"
+                isFormValid
+                  ? "bg-primary text-white"
+                  : "bg-gray-300 text-black cursor-not-allowed"
               }`}
             >
               Confirm

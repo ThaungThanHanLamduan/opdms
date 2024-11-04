@@ -9,7 +9,7 @@ export const getAllPatients = async (
   name?: string,
   id?: number,
   treatedStatus?: string,
-  pageNumber? :number
+  page? :number
 ) => {
   try {
     const params = new URLSearchParams();
@@ -20,7 +20,7 @@ export const getAllPatients = async (
 
     if (treatedStatus) params.append('treatedStatus', treatedStatus)
 
-    if(pageNumber  !== undefined ) params.append('pageNumber', pageNumber.toString())
+    if(page  !== undefined ) params.append('page', page.toString())
     const newUrl = `${window.location.pathname}?${params.toString()}`;
     window.history.pushState({}, "", newUrl)
 

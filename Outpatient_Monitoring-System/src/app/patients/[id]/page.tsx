@@ -44,7 +44,7 @@ const Patients: React.FC<PatientsPageProps> = ({params}) => {
       </div>
       <MedicalTreatementTable />
       <DiagnosisChart />
-      <MedicalTreatmentModal isOpen={isModalOpen} onClose={toggleModal} />
+      <MedicalTreatmentModal isOpen={isModalOpen} onClose={toggleModal} patientId={id} />
     </div>
     </PatientDetailProvider>
   );
