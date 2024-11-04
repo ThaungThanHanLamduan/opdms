@@ -5,19 +5,24 @@ import GlucoseLevelChart from "./charts/GlucoseLevelChart";
 import HeartRateChart from "./charts/HeartRateChart";
 import BodyTemperatureChart from "./charts/BodyTemperatureChart";
 
-const DiagnosisChart: React.FC = () => {
+interface DiagnosisChartProps {
+  patientId : number
+}
+
+const DiagnosisChart: React.FC<DiagnosisChartProps> = ({patientId}) => {
+  
   const [selectedChart, setSelectedChart] = useState("Blood Pressure");
 
   const renderChart = () => {
     switch (selectedChart) {
       case "Blood Pressure":
-        return <div className="px-4 py-2"><BloodPressureChart/></div>;
+        return <div className="px-4 py-2"><BloodPressureChart patientId= {patientId}/></div>;
       case "Glucose Level":
-        return  <div className="px-4 py-2"><GlucoseLevelChart/></div>;
+        return  <div className="px-4 py-2"><GlucoseLevelChart patientId= {patientId}/></div>;
       case "Heart Rate":
-        return <div className="px-4 py-2"><HeartRateChart/></div>;
+        return <div className="px-4 py-2"><HeartRateChart patientId= {patientId}/></div>;
       case "Body Temperature":
-        return <div className="px-4 py-2"><BodyTemperatureChart/></div>;
+        return <div className="px-4 py-2"><BodyTemperatureChart patientId= {patientId}/></div>;
       default:
         return <div>Select a chart to view</div>;
     }
