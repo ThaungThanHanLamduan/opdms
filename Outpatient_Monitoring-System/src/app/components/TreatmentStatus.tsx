@@ -10,13 +10,13 @@ interface TreatmentStatusProps {
 }
 
 const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
-  const { data } = useGetTreatmentStatus(patientID);
+  const { data, refetch } = useGetTreatmentStatus(patientID);
   const { treatmentRefetch, refetchPatients } = useOutpatientTable();
   const updateTreatmentStatusMutation = useUpdateTreatmentStatus();
   const patientStatus = data?.data?.status || "PENDING";
 
   const [isOpen, setIsOpen] = useState(false);
-  const [status, setStatus] = useState<string>("PENDING");
+  const [status, setStatus] = useState<string>(patientStatus);
 
   useEffect(() => {
     setStatus(patientStatus);
@@ -33,6 +33,7 @@ const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
       {
         onSuccess: () => {
           setStatus(selectedStatus);
+          refetch();  // Refetch treatment status
           treatmentRefetch();
           refetchPatients();
           setIsOpen(false);
@@ -82,9 +83,7 @@ const TreatmentStatus: React.FC<TreatmentStatusProps> = ({ patientID }) => {
         }`}
       >
         <span>{generateStatus(status).buttonIcon}</span>
-        <span
-          className={`text-sm font-medium ${generateStatus(status).buttonText}`}
-        >
+        <span className={`text-sm font-medium ${generateStatus(status).buttonText}`}>
           {status.toLowerCase()}
         </span>
       </button>

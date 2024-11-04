@@ -56,7 +56,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
-  
+
     setFormData((prevFormData) => {
       if (name === "gender") {
         return {
@@ -78,7 +78,6 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
       return { ...prevFormData, [name]: value };
     });
   };
-  
 
   const handleNationalityChange = (
     newValue: SingleValue<{ value: string; label: string }>
@@ -98,6 +97,20 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
       onSuccess: () => {
         console.log(formData);
         refetchPatients();
+        setFormData({
+          name: "",
+          patientDetails: {
+            dateOfBirth: "",
+            contactNo: "",
+            address: "",
+            gender: 0,
+            bloodType: "A",
+            email: "",
+            diagnosis: "",
+            identification_no: "",
+            nationality: "",
+          },
+        });
         onClose();
       },
       onError: (error) => {
@@ -150,20 +163,19 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
           </div>
 
           <div>
-  <label className="block text-sm font-medium mb-1">Gender</label>
-  <select
-    name="gender"
-    className="w-full border rounded px-3 py-2"
-    value={formData.patientDetails.gender === 1 ? "Male" : "Female"} 
-    onChange={handleChange}
-    required
-  >
-    <option value="">Select Gender</option> 
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-</div>
-
+            <label className="block text-sm font-medium mb-1">Gender</label>
+            <select
+              name="gender"
+              className="w-full border rounded px-3 py-2"
+              value={formData.patientDetails.gender === 1 ? "Male" : "Female"}
+              onChange={handleChange}
+              required
+            >
+              <option value="">Select Gender</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
 
           <div>
             <label className="block text-sm font-medium mb-1">Blood Type</label>

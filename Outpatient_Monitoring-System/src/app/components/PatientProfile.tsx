@@ -19,7 +19,6 @@ const PatientProfile: React.FC = () => {
     }
   }, [patient.id]);
 
-  // Only fetch when id is a valid number
   const { data } = useGetTreatmentStatus(id as number);
   const patientStatus = data?.data.status || "PENDING";
   const appointmentDate = data?.data.appointmentDate;
@@ -42,7 +41,7 @@ const PatientProfile: React.FC = () => {
       <div className="flex justify-between w-full items-center">
         <p className="text-lg">Treatment</p>
         <p>:</p>
-        <p className="text-lg">{patient.patientDetails.diagnosis}</p>
+        <p className="text-lg">{patient.patientDetails?.diagnosis}</p>
       </div>
     
       <div className={`${statusBorder} border flex w-full justify-between items-center gap-6 px-3 py-2 rounded`}>
