@@ -7,6 +7,7 @@ import {
 import React, {
   createContext,
   useContext,
+  useEffect,
   useMemo,
   useRef,
   useState,
@@ -25,6 +26,9 @@ export const OutpatientTableProvider: React.FC<{
 }> = ({ children }) => {
   // Fetch data from API
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [treatedStatus, setTreatedStatus] = useState("");
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalItems, setTotalItems] = useState<number>(0);
 
   // Dropdown Bar
   const stats: DropdownPatient[] = [
@@ -34,15 +38,32 @@ export const OutpatientTableProvider: React.FC<{
     { title: "Pending Outpatients", value: "PENDING" },
   ];
 
-  const [treatedStatus, setTreatedStatus] = useState("");
-
   const { data, refetch: refetchPatients } = useGetAllPatients(
     isNaN(Number(searchTerm)) ? searchTerm : undefined,
     !isNaN(Number(searchTerm)) ? Number(searchTerm) : undefined,
-    treatedStatus
+    treatedStatus,
+    currentPage
   );
 
+  useEffect(() => {
+    if (data) {
+      setTotalItems(data?.data?.numberOfElements || 0);
+    }
+  }, [data]);
+
   const patients = data?.data?.content;
+  const totalPatients = data?.data?.numberOfElements || 0;
+  const itemsPerPage = data?.data?.size || 1;
+
+  useEffect(() => {
+    setTotalItems(totalPatients);
+  }, [totalPatients]);
+
+  useEffect(() => {
+    refetchPatients();
+  }, [currentPage, refetchPatients]);  
+
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const { data: treatment, refetch: treatmentRefetch } = useGetTreatmentCount();
   const treatmentCount = treatment?.data;
@@ -76,6 +97,7 @@ export const OutpatientTableProvider: React.FC<{
 
   // Handle search input and refetch data
   const handleSearch = () => {
+    setCurrentPage(0);
     refetchPatients();
   };
 
@@ -95,14 +117,6 @@ export const OutpatientTableProvider: React.FC<{
     setIsOpen(false);
   };
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = 5;
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
   return (
     <OutpatientTableContext.Provider
       value={{
@@ -113,7 +127,7 @@ export const OutpatientTableProvider: React.FC<{
         currentPage,
         setCurrentPage,
         totalPages,
-        handlePageChange,
+        handlePageChange: (page: number) => setCurrentPage(page),
         openModal,
         closeModal,
         isModalOpen,

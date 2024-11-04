@@ -47,7 +47,7 @@ export type OutpatientTableTypes = {
   handleSearch: () => void;
   refetchPatients: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult<AxiosResponse<any, any> | undefined, unknown>>;
   treatmentCount : any,
-  treatmentRefetch: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult<AxiosResponse<any, any> | undefined, unknown>>;
+  treatmentRefetch: any
 };
 
 export type PatientFormModalProps = {

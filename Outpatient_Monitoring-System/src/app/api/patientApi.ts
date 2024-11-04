@@ -12,25 +12,20 @@ export const getAllPatients = async (
   pageNumber? :number
 ) => {
   try {
-    let queryString = "";
+    const params = new URLSearchParams();
 
-    if (name) {
-      queryString += `?name=${name}`;
-    }
+    if (name) params.append('name',name)
 
-    if (id) {
-      queryString += (queryString ? "&" : "?") + `id=${id}`;
-    }
+    if (id) params.append('id',id.toString())
 
-    if (treatedStatus) {
-      queryString += (queryString ? "&" : "?") + `treatedStatus=${treatedStatus}`;
-    }
+    if (treatedStatus) params.append('treatedStatus', treatedStatus)
 
-    if(pageNumber) {
-      queryString += (queryString ? "&" : "?") + `pageNumber=${pageNumber}`
-    }
+    if(pageNumber  !== undefined ) params.append('pageNumber', pageNumber.toString())
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    window.history.pushState({}, "", newUrl)
 
-    const response = await axios.get(`${BaseURL}/api/patients${queryString}`, {
+    const response = await axios.get(`${BaseURL}/api/patients`, {
+      params,
       headers: {
         Authorization: `Bearer ${token}`,
         Accept: "application/json",
