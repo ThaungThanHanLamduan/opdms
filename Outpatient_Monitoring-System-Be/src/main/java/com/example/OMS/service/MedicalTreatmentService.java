@@ -69,6 +69,9 @@ public class MedicalTreatmentService {
             if(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate() != null){
                 existingTreatment.getMedicalTreatmentDetails().setHeartRate(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate());
             }
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getBodyTempF() != null){
+                existingTreatment.getMedicalTreatmentDetails().setBodyTempF(medicalTreatmentData.getMedicalTreatmentDetails().getBodyTempF());
+            }
             if(medicalTreatmentData.getTreatedStatus() != null){
                 existingTreatment.setTreatedStatus(medicalTreatmentData.getTreatedStatus());
             }
@@ -147,5 +150,14 @@ public class MedicalTreatmentService {
         statusCountResponses.add(totalResponse);
 
         return statusCountResponses;
+    }
+
+    public void deleteMedicalTreatment(Long treatmentId){
+        Optional<MedicalTreatment> existingTreatmentOptional = medicalTreatmentRepository.findById(treatmentId);
+        if(!existingTreatmentOptional.isPresent()){
+            throw new IllegalArgumentException("Treatment not found");
+        }else{
+            medicalTreatmentRepository.deleteById(treatmentId);
+        }
     }
 }

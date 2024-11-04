@@ -24,6 +24,9 @@ public class MedicalTreatmentDetails {
     @Column(name = "weight_kg", nullable = true)
     private Double weight;
 
+    @Column(name = "body_temp_F", nullable = true)
+    private Double bodyTempF;
+
     // Getters and Setters
     public Long getId() {
         return id;
@@ -71,5 +74,13 @@ public class MedicalTreatmentDetails {
 
     public void setWeight(Double weight) {
         this.weight = weight;
+    }
+
+    public Double getBodyTempF() {
+        return bodyTempF;
+    }
+
+    public void setBodyTempF(Double bodyTempF) {
+        this.bodyTempF = bodyTempF;
     }
 }

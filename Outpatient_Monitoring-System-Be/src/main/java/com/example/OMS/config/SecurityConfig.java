@@ -20,7 +20,7 @@ public class SecurityConfig {
                 .headers(headers->headers
                         .frameOptions(frameOptions  -> frameOptions.sameOrigin()))
                 .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 //                .authorizeHttpRequests(auth ->
 //                        auth.requestMatchers("/api/auth/login").permitAll()
 //                .anyRequest().authenticated())

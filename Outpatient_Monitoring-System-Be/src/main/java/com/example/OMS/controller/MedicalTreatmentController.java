@@ -39,4 +39,9 @@ public class MedicalTreatmentController {
         return ResponseEntity.ok(updatedMedicalTreatment);
     }
 
+    @DeleteMapping("/delete/{treatmentId}")
+    public ResponseEntity<String> deleteMedicalRecord(@PathVariable Long treatmentId){
+        medicalTreatmentService.deleteMedicalTreatment(treatmentId);
+        return ResponseEntity.ok("Treatment with id " + treatmentId + " has been deleted successfully!");
+    }
 }
