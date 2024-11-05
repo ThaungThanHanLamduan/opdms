@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { LuAlarmClock } from "react-icons/lu";
 import { BsCheck, BsX } from "react-icons/bs";
 import { useGetTreatment } from "../hooks/useTreatmentApi";
 import { Treatment } from "@/types/treatmentTypes";
+import EditMedicalTreatmentModal from "./EditMedicalTreatmentModal";
+import DeleteMedicalTreatmentModal from "./DeleteMedicalTreatmentModal";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -31,20 +33,43 @@ const getStatusBadge = (status: string) => {
 };
 
 interface TableProps {
-  patientId : number
+  patientId: number;
 }
 
-const MedicalTreatmentTable: React.FC<TableProps> = ({patientId}) => {
+const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
+  const { data, refetch } = useGetTreatment(patientId);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const {data} = useGetTreatment(patientId);
+  const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(
+    null
+  );
 
   const medicalTreatments = data?.data || [];
-  
+
+  const openEditModal = (treatment: Treatment) => {
+    setSelectedTreatment(treatment);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedTreatment(null);
+    setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = (treatment: Treatment) => {
+    setSelectedTreatment(treatment);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setSelectedTreatment(null);
+    setIsDeleteModalOpen(false);
+  };
 
   return (
-    <div className="">
-      
-      <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-md overflow-hidden">
+    <div>
+      <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-md">
         <thead>
           <tr className="bg-gray-100">
             <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
@@ -73,7 +98,7 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({patientId}) => {
           </tr>
         </thead>
         <tbody>
-          {medicalTreatments.map((treatment : Treatment) => (
+          {medicalTreatments.map((treatment: Treatment) => (
             <tr key={treatment.patientId} className="even:bg-gray-100">
               <td className="border border-gray-300 px-4 py-2">
                 {treatment.appointmentDate}
@@ -88,22 +113,28 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({patientId}) => {
                 {treatment.medicalTreatmentDetails.heartRate}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.medicalTreatmentDetails.height}
+                {treatment.medicalTreatmentDetails.weight}
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {treatment.medicalTreatmentDetails.height}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.medicalTreatmentDetails.bodyTemperature}
+                {treatment.medicalTreatmentDetails.bodyTempF}
               </td>
               <td className="border border-gray-300 px-4 py-2">
                 {getStatusBadge(treatment.treatedStatus)}
               </td>
-              <td className="border  px-4 py-4 flex items-center gap-3">
-                <button className="text-black">
+              <td className="border px-4 py-4 flex items-center gap-3">
+                <button
+                  onClick={() => openEditModal(treatment)}
+                  className="text-black"
+                >
                   <FaEdit />
                 </button>
-                <button className="text-red-500 hover:text-red-700">
+                <button
+                  onClick={() => openDeleteModal(treatment)}
+                  className="text-red-500 hover:text-red-700"
+                >
                   <FaTrashAlt />
                 </button>
               </td>
@@ -111,6 +142,22 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({patientId}) => {
           ))}
         </tbody>
       </table>
+      {selectedTreatment && (
+        <EditMedicalTreatmentModal
+          isOpen={isEditModalOpen}
+          onClose={closeEditModal}
+          treatment={selectedTreatment}
+          refetch={refetch}
+        />
+      )}
+      {selectedTreatment && (
+        <DeleteMedicalTreatmentModal
+          isOpen={isDeleteModalOpen}
+          onClose={closeDeleteModal}
+          treatmentId={selectedTreatment.id!}
+          refetch={refetch}
+        />
+      )}
     </div>
   );
 };

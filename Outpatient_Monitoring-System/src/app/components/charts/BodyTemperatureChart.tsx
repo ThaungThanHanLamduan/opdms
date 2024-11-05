@@ -35,10 +35,10 @@ const BodyTemperatureChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
     ?.map(
       (treatment: {
         appointmentDate: string;
-        medicalTreatmentDetails: { bodyTemperature: number };
+        medicalTreatmentDetails: { bodyTempF: number };
       }) => ({
         date: treatment.appointmentDate,
-        bodyTemperature: treatment.medicalTreatmentDetails.bodyTemperature,
+        bodyTemperature: treatment.medicalTreatmentDetails.bodyTempF,
       })
     )
     .sort(
@@ -61,7 +61,7 @@ const BodyTemperatureChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
         data: bodyTemperatureData,
         fill: false,
         borderColor: "rgba(54,162,235,1)",
-        tension: 0.1,
+        tension: 0.4,
       },
     ],
   };

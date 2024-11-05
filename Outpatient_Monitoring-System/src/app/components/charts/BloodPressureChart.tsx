@@ -68,14 +68,14 @@ const BloodPressureChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
       },
       title: {
         display: true,
-        text: 'Monthly Blood Pressure Readings (mmHg)',
+        text: 'Blood Pressure Readings Over Time (mmHg)',
       },
     },
     scales: {
       y: {
         beginAtZero: false,
         min: 50, 
-        max: 180, // Adjust according to expected range
+        max: 180,
       },
     },
   };
