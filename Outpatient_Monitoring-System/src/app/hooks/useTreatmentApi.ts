@@ -2,6 +2,7 @@ import { Treatment } from "@/types/treatmentTypes";
 import { useMutation, useQuery } from "react-query";
 import {
   createTreatment,
+  deleteTreatment,
   getTreatment,
   updateTreatment,
 } from "../api/treatmentApi";
@@ -20,4 +21,8 @@ export const useUpdateTreatment = () => {
 
 export const useGetTreatment = (patientId: number) => {
   return useQuery(["getTreatment", patientId], () => getTreatment(patientId));
+};
+
+export const useDeleteTreatment = () => {
+  return useMutation((treatmentId: number) => deleteTreatment(treatmentId));
 };

@@ -25,9 +25,11 @@ export const createTreatment = async (treatmentData: Treatment) => {
 };
 
 export const updateTreatment = async (treatmentData: Treatment) => {
+  console.log(treatmentData.id);
+  
   try {
     const response = await axios.patch(
-      `${BaseURL}/api/treatments/update/${treatmentData.patientId}`,
+      `${BaseURL}/api/treatments/update/${treatmentData.id}`,
       treatmentData,
       {
         headers: {
@@ -57,3 +59,18 @@ export const getTreatment = async (patientId: number) => {
     console.error(error);
   }
 };
+
+export const deleteTreatment = async (treatmentId : number) => {
+  try {
+    const response = await axios.delete(`${BaseURL}/api/treatments/delete/${treatmentId}`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+    return response;
+  } catch (error) {
+    console.error(error)
+  }
+}

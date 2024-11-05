@@ -1,4 +1,5 @@
 export type Treatment = {
+  id?: number,
   appointmentDate: string;
   patientId?: number;
   treatedStatus: string;
@@ -8,6 +9,6 @@ export type Treatment = {
     heartRate: number;
     weight: number;
     height: number;
-    bodyTemperature: number;
+    bodyTempF: number;
   };
 };

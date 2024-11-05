@@ -122,7 +122,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center select-none backdrop-blur-sm transition-opacity duration-300 z-10">
       <div className="bg-white p-8 rounded-lg shadow-lg w-[500px] max-w-full">
         <h2 className="text-2xl mb-6 text-black">
           Patient Personal Information
