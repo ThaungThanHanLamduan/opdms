@@ -33,8 +33,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers("/api/auth/signup", "/api/auth/login")
                         .permitAll()
+                        .requestMatchers("/h2-console/**").permitAll()
                         .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+                .headers(headers -> headers
+                        .frameOptions(frameOption->frameOption.sameOrigin())
+                )
+                .httpBasic(httpBasic -> httpBasic.disable())
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
