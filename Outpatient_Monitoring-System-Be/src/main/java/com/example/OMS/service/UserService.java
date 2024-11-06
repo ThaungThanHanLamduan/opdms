@@ -39,11 +39,16 @@ public class UserService {
     }
 
     public String login(User user){
+        Optional<User> existingUser = userRepository.findUserByEmail(user.getEmail());
+        if(!existingUser.isPresent()){
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+        User authUser = existingUser.get();
         Authentication authentication = authenticationManager
-                .authenticate(new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+                .authenticate(new UsernamePasswordAuthenticationToken(authUser.getUsername(), user.getPassword()));
 
         if(authentication.isAuthenticated()){
-            return jwtService.generateJWTToken(user.getUsername());
+            return jwtService.generateJWTToken(authUser.getUsername());
         }
         return "Fail to login.";
     }
