@@ -48,7 +48,7 @@ const GlucoseLevelChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
         data: glucoseData,
         fill: false,
         borderColor: "rgba(75,192,192,1)",
-        tension: 0.1,
+        tension: 0.4,
       },
     ],
   };

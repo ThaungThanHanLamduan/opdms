@@ -60,7 +60,7 @@ const HeartRateChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
         data: heartRateData,
         fill: false,
         borderColor: "rgba(255,99,132,1)",
-        tension: 0.1,
+        tension: 0.0,
       },
     ],
   };
