@@ -1,5 +1,6 @@
 package com.example.OMS.controller;
 
+import com.example.OMS.model.GetUserResponse;
 import com.example.OMS.model.User;
 import com.example.OMS.service.UserService;
 import org.apache.coyote.Response;
@@ -16,6 +17,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<GetUserResponse> getUserDetails(@RequestHeader("Authorization") String token){
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        GetUserResponse user = userService.getUserDetails(token);
+        return ResponseEntity.ok(user);
+    }
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody User user){
         User createdUser = userService.signup(user);

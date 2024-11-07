@@ -1,5 +1,6 @@
 package com.example.OMS.service;
 
+import com.example.OMS.model.GetUserResponse;
 import com.example.OMS.model.User;
 import com.example.OMS.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,20 @@ public class UserService {
     public String logout(String token){
         jwtService.blacklistToken(token);
         return "Logged out!";
+    }
+
+    public GetUserResponse getUserDetails(String token){
+        String username = jwtService.extractUsername(token);
+        Optional<User> existingUser = userRepository.findUserByUsername(username);
+        if(!existingUser.isPresent()){
+            throw new IllegalArgumentException("User does not exist");
+        }
+        GetUserResponse response = new GetUserResponse();
+        User user = existingUser.get();
+        response.setId(user.getId());
+        response.setUsername(user.getUsername());
+        response.setEmail(user.getEmail());
+
+        return response;
     }
 }
