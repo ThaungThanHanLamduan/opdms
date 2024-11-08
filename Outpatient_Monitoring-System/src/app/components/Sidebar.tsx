@@ -67,7 +67,7 @@ const Sidebar = () => {
             alt="Profile"
             className="w-10 h-10 rounded-full object-cover text-white"
           />
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-1">
             <p className="text-sm text-white">{user?.username}</p>
             <p className="text-xs text-slate-300">{user?.email}</p>
           </div>

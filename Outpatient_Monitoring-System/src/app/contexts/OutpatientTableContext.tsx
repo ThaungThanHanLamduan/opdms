@@ -16,6 +16,7 @@ import {
   useGetAllPatients,
   useGetTreatmentCount,
 } from "../hooks/usePatientApi";
+import { useAuth } from "./AuthContext";
 
 const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
   undefined
@@ -29,6 +30,7 @@ export const OutpatientTableProvider: React.FC<{
   const [treatedStatus, setTreatedStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
   const [totalItems, setTotalItems] = useState<number>(0);
+
 
   // Dropdown Bar
   const stats: DropdownPatient[] = [
@@ -116,6 +118,15 @@ export const OutpatientTableProvider: React.FC<{
     setTreatedStatus(value);
     setIsOpen(false);
   };
+
+  const {isLogin} = useAuth()
+
+  useEffect(() => {
+    if(isLogin){
+      refetchPatients()
+      treatmentRefetch();
+    }
+  },[isLogin])
 
   return (
     <OutpatientTableContext.Provider

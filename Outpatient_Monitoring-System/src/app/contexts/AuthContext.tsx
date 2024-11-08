@@ -9,25 +9,27 @@ const AuthContext = createContext<authContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [token, setToken] = useState<string | null>(authService.getToken() || null);
-  // const [isLogin, setIsLogin] = useState(false)
+  const [isLogin, setIsLogin] = useState(false)
   const router = useRouter();
 
 
   const login = async (newToken: string) => {
     authService.login(newToken);
     setToken(newToken);
-    toast.success("Login successfully");
     router.push("/");
+    setIsLogin(true)
+    toast.success("Login successfully");
   };
 
   const logout = () => {
     authService.logout();
     setToken(null); 
+    setIsLogin(false)
     router.push("/auth/login");
   };
 
   return (
-    <AuthContext.Provider value={{ token, login, logout}}>
+    <AuthContext.Provider value={{ token, login, logout, isLogin}}>
       {children}
     </AuthContext.Provider>
   );

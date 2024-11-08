@@ -20,27 +20,28 @@ export const getAllPatients = async (
   try {
     const params = new URLSearchParams();
 
-    if (name) params.append("?name", name);
+    if (name) params.set("name", name);
+    if (id) params.set("id", id.toString());
+    if (treatedStatus) params.set("treatedStatus", treatedStatus);
+    if (page !== undefined && page !== 0) params.set("page", page.toString());
 
-    if (id) params.append("?id", id.toString());
-
-    if (treatedStatus) params.append("?treatedStatus", treatedStatus);
-
-    if (page !== undefined && page !== 0)
-      params.append("?page", page.toString());
-    const newUrl = `${window.location.pathname}${params.toString()}`;
-    window.history.pushState({}, "", newUrl);
+    const newUrl = `${window.location.pathname}?${params.toString()}`;
+    
+    window.history.replaceState({}, "", newUrl);
 
     const response = await axios.get(`${BaseURL}/api/patients`, {
-      params,
+      params: Object.fromEntries(params.entries()),
       headers,
     });
 
     return response;
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching patients:", error);
   }
 };
+
+
+
 
 export const getSinglePatient = async ({ id }: { id: number }) => {
   try {
