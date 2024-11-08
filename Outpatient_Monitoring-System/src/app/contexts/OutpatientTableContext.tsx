@@ -17,6 +17,7 @@ import {
   useGetTreatmentCount,
 } from "../hooks/usePatientApi";
 import { useAuth } from "./AuthContext";
+import { getToken } from "@/service/authService";
 
 const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
   undefined
@@ -25,6 +26,7 @@ const OutpatientTableContext = createContext<OutpatientTableTypes | undefined>(
 export const OutpatientTableProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
+  const authToken = getToken();
   // Fetch data from API
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [treatedStatus, setTreatedStatus] = useState("");
@@ -69,7 +71,11 @@ export const OutpatientTableProvider: React.FC<{
 
   const { data: treatment, refetch: treatmentRefetch } = useGetTreatmentCount();
   const treatmentCount = treatment?.data;
-
+  useEffect(()=>{
+    if(authToken){
+      refetchPatients();
+    }
+  },[authToken])
   // Memoized filtered patients based on search term
   const filteredPatients = useMemo(() => {
     return patients?.filter((patient: Patient) => {

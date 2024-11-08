@@ -16,9 +16,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const login = async (newToken: string) => {
     authService.login(newToken);
     setToken(newToken);
-    router.push("/");
     setIsLogin(true)
-    toast.success("Login successfully");
+    toast.success("Login successful")
+    window.location.replace('/')
   };
 
   const logout = () => {

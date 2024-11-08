@@ -27,11 +27,11 @@ const Login: React.FC = () => {
 
   useEffect(() => {
     if (signInMutation.isSuccess) {
+      console.log("SUCCESSFUL LOGIN")
       const authToken = getToken();
       if (authToken) login(authToken);
-      toast.success("Login success");
     }
-  }, [login, router, signInMutation.isSuccess]);
+  }, [login, router, signInMutation]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
