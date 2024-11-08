@@ -12,7 +12,7 @@ const TablePagination: React.FC = () => {
   } = useOutpatientTable();
 
   const handlePageChange = (page: number) => {
-    if (page >= 0 && page <= totalPages) {
+    if (page >= 1 && page <= totalPages) {
       refetchPatients();
       onPageChange(page);
     }
@@ -20,7 +20,7 @@ const TablePagination: React.FC = () => {
 
   const generatePageNumbers = () => {
     const pages = [];
-    for (let i = 0; i <= totalPages; i++) {
+    for (let i = 1; i <= totalPages; i++) {
       pages.push(i);
     }
     return pages;
@@ -31,9 +31,9 @@ const TablePagination: React.FC = () => {
       {/* Previous Button */}
       <button
         onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === 0}
+        disabled={currentPage === totalPages}
         className={`p-2 rounded-full bg-primary ${
-          currentPage === 0
+          currentPage === 1
             ? "cursor-not-allowed opacity-50"
             : "hover:bg-gray-200"
         }`}
@@ -52,7 +52,7 @@ const TablePagination: React.FC = () => {
               : "hover:bg-gray-200 text-gray-500"
           }`}
         >
-          {page + 1}
+          {page}
         </button>
       ))}
 

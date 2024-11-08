@@ -8,6 +8,7 @@ import { Toaster } from "react-hot-toast";
 import Sidebar from "./components/Sidebar";
 import { usePathname } from "next/navigation";
 import { OutpatientTableProvider } from "./contexts/OutpatientTableContext";
+import ErrorPage from "./error";
 
 const queryClient = new QueryClient();
 
@@ -37,3 +38,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default RootLayout;
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <ErrorPage error={error} reset={() => {}} />;
+}
