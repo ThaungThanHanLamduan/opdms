@@ -6,15 +6,17 @@ import { MdOutlineFileDownload } from "react-icons/md";
 import Dropdownbar from "./Dropdownbar";
 import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 import PatientFormModal from "./PatientFormModal";
+import { motion } from "framer-motion";
 
-// HeaderButton component with optional onClick, icon, label, and rounded props
 const HeaderButton: React.FC<{
   onClick?: () => void;
   icon?: React.ReactNode;
   label: string;
   rounded?: boolean;
 }> = ({ onClick, icon, label, rounded = false }) => (
-  <button
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
     onClick={onClick}
     className={`bg-primary hover:bg-primaryhover active:bg-primaryactive text-white flex items-center gap-2 px-4 py-1 ${
       rounded ? "rounded-full px-3" : "rounded"
@@ -22,7 +24,7 @@ const HeaderButton: React.FC<{
   >
     {icon && <span>{icon}</span>}
     <span>{label}</span>
-  </button>
+  </motion.button>
 );
 
 const TableHeader = () => {
@@ -37,7 +39,6 @@ const TableHeader = () => {
     handleSearch,
   } = useOutpatientTable();
 
-  // Function to handle search input change
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
@@ -68,20 +69,28 @@ const TableHeader = () => {
             />
             <FiSearch
               onClick={handleSearch}
-              className="absolute top-2 right-2 text-slate-400"
+              className="absolute top-2 right-2 text-slate-400 cursor-pointer"
               size="15px"
             />
           </div>
           <Dropdownbar />
         </div>
       </div>
-      <PatientFormModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={() => {
-          closeModal(); // Only close modal on submit
-        }}
-      />
+
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: isModalOpen ? 1 : 0, y: isModalOpen ? 0 : -50 }}
+        transition={{ duration: 0.3 }}
+        style={{ display: isModalOpen ? "block" : "none" }}
+      >
+        <PatientFormModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={() => {
+            closeModal(); 
+          }}
+        />
+      </motion.div>
     </>
   );
 };

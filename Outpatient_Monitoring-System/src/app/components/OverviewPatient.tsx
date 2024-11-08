@@ -4,12 +4,12 @@ import { StatCardProps } from "@/types/patientTypes";
 import React from "react";
 import { BsFillPersonCheckFill, BsFillPersonXFill } from "react-icons/bs";
 import { FaUserClock, FaUserGroup } from "react-icons/fa6";
+import { motion } from "framer-motion";
 import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 const StatCard: React.FC<StatCardProps> = ({ icon: Icon, title, value }) => (
   <div
-    className="flex gap-3 items-center px-6
-   py-4"
+    className="flex gap-3 items-center px-6 py-4"
   >
     <Icon className="border rounded-full p-2 bg-primary text-white" size={50} />
     <div className="flex flex-col justify-between items-start gap-1">
@@ -52,16 +52,27 @@ const OverviewPatient = () => {
     });
 
   return (
-    <div className="w-full rounded-full bg-white flex justify-between items-center">
-      {sortedTreatmentCount?.map((treatment: any) => (
-        <StatCard
+    <motion.div
+      className="w-full rounded-full bg-white flex justify-between items-center"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
+      {sortedTreatmentCount?.map((treatment: any, index: number) => (
+        <motion.div
           key={treatment?.treatedStatus}
-          icon={getIconByTreatedStatus(treatment?.treatedStatus)}
-          title={capitalize(treatment?.treatedStatus) + " Patients"}
-          value={treatment?.count}
-        />
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.1 }}
+        >
+          <StatCard
+            icon={getIconByTreatedStatus(treatment?.treatedStatus)}
+            title={capitalize(treatment?.treatedStatus) + " Patients"}
+            value={treatment?.count}
+          />
+        </motion.div>
       ))}
-    </div>
+    </motion.div>
   );
 };
 

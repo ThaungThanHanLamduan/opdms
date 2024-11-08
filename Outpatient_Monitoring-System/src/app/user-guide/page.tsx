@@ -1,7 +1,7 @@
 "use client";
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+import { motion } from "framer-motion";
 
 const Accordion = ({
   title,
@@ -10,6 +10,7 @@ const Accordion = ({
   onClick,
 }: {
   title: string;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   content: any;
   isOpen: boolean;
   onClick: () => void;
@@ -20,9 +21,19 @@ const Accordion = ({
         className={`w-full text-left flex justify-between items-center py-4 px-4 font-semibold ${isOpen ? 'bg-slate-50 text-black' : 'bg-white text-black'}`}
         onClick={onClick}
       >
-       <span> {title}</span>{isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />} 
+        <span>{title}</span>
+        {isOpen ? <IoIosArrowUp /> : <IoIosArrowDown />}
       </button>
-      {isOpen && <div className="bg-white text-black p-4">{content}</div>}
+      
+      {/* Animate content appearance using framer-motion */}
+      <motion.div
+        initial={{ height: 0, opacity: 0 }}
+        animate={{ height: isOpen ? "auto" : 0, opacity: isOpen ? 1 : 0 }}
+        transition={{ duration: 0.3 }}
+        style={{ overflow: "hidden" }}
+      >
+        <div className="bg-white text-black p-4">{content}</div>
+      </motion.div>
     </div>
   );
 };
@@ -106,9 +117,7 @@ const UserGuide = () => {
   return (
     <div className="bg-slate-200 flex flex-col justify-between px-6 py-4 h-screen">
       <div>
-        <h2 className="text-black text-2xl py-4">
-         System User Guide
-        </h2>
+        <h2 className="text-black text-2xl py-4">System User Guide</h2>
         {sections.map((section, index) => (
           <Accordion
             key={index}
@@ -121,7 +130,7 @@ const UserGuide = () => {
       </div>
 
       <p className="text-slate-600 py-4">
-        <span className="text-black"> Note : </span>Always ensure that patient
+        <span className="text-black">Note:</span> Always ensure that patient
         details and medical records are handled securely and confidentially in
         compliance with healthcare regulations.
       </p>

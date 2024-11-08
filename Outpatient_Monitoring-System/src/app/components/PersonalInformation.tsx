@@ -1,4 +1,6 @@
+"use client";
 import React from "react";
+import { motion } from "framer-motion"; 
 import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 const PersonalInformation: React.FC = () => {
@@ -7,7 +9,7 @@ const PersonalInformation: React.FC = () => {
   const personalInfoFields = [
     { label: "Patient ID", value: patient.id },
     { label: "Name", value: patient.name },
-    { label: "Gender", value: patient.patientDetails?.gender == 0 ? "Male" : "Female" },
+    { label: "Gender", value: patient.patientDetails?.gender === 0 ? "Male" : "Female" },
     { label: "Blood Type", value: patient.patientDetails?.bloodType },
     { label: "Date of Birth", value: patient.patientDetails?.dateOfBirth },
     { label: "Nationality", value: patient.patientDetails?.nationality },
@@ -15,7 +17,12 @@ const PersonalInformation: React.FC = () => {
   ];
 
   return (
-    <div className="rounded-lg p-4 w-2/3 bg-white">
+    <motion.div
+      className="rounded-lg p-4 w-2/3 bg-white"
+      initial={{ opacity: 0, y: 20 }} 
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }} 
+    >
       <h2 className="text-2xl font-semibold mb-2">Personal Information</h2>
       <hr className="border-t border-slate-300 w-full my-4" />
 
@@ -39,7 +46,7 @@ const PersonalInformation: React.FC = () => {
         <span className="text-center col-span-1">:</span>
         <span className="col-span-4 text-sm">{patient.patientDetails?.address || "N/A"}</span>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

@@ -6,6 +6,7 @@ import { useGetTreatment } from "../hooks/useTreatmentApi";
 import { Treatment } from "@/types/treatmentTypes";
 import EditMedicalTreatmentModal from "./EditMedicalTreatmentModal";
 import DeleteMedicalTreatmentModal from "./DeleteMedicalTreatmentModal";
+import { motion } from "framer-motion"; // Import motion from Framer Motion
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -40,7 +41,6 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
   const { data, refetch } = useGetTreatment(patientId);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(
     null
   );
@@ -99,7 +99,13 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
         </thead>
         <tbody>
           {medicalTreatments.map((treatment: Treatment) => (
-            <tr key={treatment.patientId} className="even:bg-gray-100">
+            <motion.tr
+              key={treatment.patientId}
+              className="even:bg-gray-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <td className="border border-gray-300 px-4 py-2">
                 {treatment.appointmentDate}
               </td>
@@ -128,35 +134,51 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
                 <button
                   onClick={() => openEditModal(treatment)}
                   className="text-black"
+                  aria-label="Edit Treatment"
                 >
                   <FaEdit />
                 </button>
                 <button
                   onClick={() => openDeleteModal(treatment)}
                   className="text-red-500 hover:text-red-700"
+                  aria-label="Delete Treatment"
                 >
                   <FaTrashAlt />
                 </button>
               </td>
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>
       {selectedTreatment && (
-        <EditMedicalTreatmentModal
-          isOpen={isEditModalOpen}
-          onClose={closeEditModal}
-          treatment={selectedTreatment}
-          refetch={refetch}
-        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <EditMedicalTreatmentModal
+            isOpen={isEditModalOpen}
+            onClose={closeEditModal}
+            treatment={selectedTreatment}
+            refetch={refetch}
+          />
+        </motion.div>
       )}
       {selectedTreatment && (
-        <DeleteMedicalTreatmentModal
-          isOpen={isDeleteModalOpen}
-          onClose={closeDeleteModal}
-          treatmentId={selectedTreatment.id!}
-          refetch={refetch}
-        />
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <DeleteMedicalTreatmentModal
+            isOpen={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            treatmentId={selectedTreatment.id!}
+            refetch={refetch}
+          />
+        </motion.div>
       )}
     </div>
   );

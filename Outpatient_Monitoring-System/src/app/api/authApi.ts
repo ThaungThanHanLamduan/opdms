@@ -14,6 +14,8 @@ interface ApiResponseError {
   message?: string;
 }
 
+const token = getToken();
+
 export const signUpUser = async (newUser: signUpDataType) => {
   try {
     const response = await axios.post(
@@ -59,7 +61,6 @@ export const signInUser = async (user: signInDataType) => {
 
 export const logoutUser = async () => {
   try {
-    const token = getToken();
     const response = await axios.post(`${BaseURL}/api/auth/logout`, {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -76,3 +77,18 @@ export const logoutUser = async () => {
     throw new Error(errorMessage);
   }
 };
+
+export const getUser = async () => {
+  try {
+    const response = await axios.get(`${BaseURL}/api/auth/user`,{
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    })
+    return response.data
+  } catch (error) {
+    console.log(error)
+  }
+}
