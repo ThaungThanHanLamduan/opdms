@@ -1,7 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AxiosResponse } from "axios";
-import { QueryObserverResult, RefetchOptions, RefetchQueryFilters } from "react-query";
+import {
+  QueryObserverResult,
+  RefetchOptions,
+  RefetchQueryFilters,
+} from "react-query";
 
 export type StatCardProps = {
   icon: React.ElementType;
@@ -16,7 +20,7 @@ export type PatientDiagnose = {
 
 export type DropdownPatient = {
   title: string;
-  value: string
+  value: string;
 };
 
 export type PaginationProps = {
@@ -40,14 +44,18 @@ export type OutpatientTableTypes = {
   isOpen: boolean;
   selectedTitle: string;
   toggleDropdown: () => void;
-  handleSelect: (title: string , value: string) => void;
+  handleSelect: (title: string, value: string) => void;
   stats: DropdownPatient[];
   searchTerm: string;
   setSearchTerm: (term: string) => void;
   handleSearch: () => void;
-  refetchPatients: <TPageData>(options?: RefetchOptions & RefetchQueryFilters<TPageData>) => Promise<QueryObserverResult<AxiosResponse<any, any> | undefined, unknown>>;
-  treatmentCount : any,
-  treatmentRefetch: any
+  refetchPatients: <TPageData>(
+    options?: RefetchOptions & RefetchQueryFilters<TPageData>
+  ) => Promise<
+    QueryObserverResult<AxiosResponse<any, any> | undefined, unknown>
+  >;
+  treatmentCount: any;
+  treatmentRefetch: any;
 };
 
 export type PatientFormModalProps = {

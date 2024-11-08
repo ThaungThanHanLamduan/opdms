@@ -61,7 +61,7 @@ export const OutpatientTableProvider: React.FC<{
 
   useEffect(() => {
     refetchPatients();
-  }, [currentPage, refetchPatients]);  
+  }, [currentPage, refetchPatients]);
 
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 

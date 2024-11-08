@@ -20,7 +20,7 @@ export const createTreatment = async (treatmentData: Treatment) => {
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -41,7 +41,7 @@ export const updateTreatment = async (treatmentData: Treatment) => {
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -56,7 +56,7 @@ export const getTreatment = async (patientId: number) => {
     });
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -71,6 +71,6 @@ export const deleteTreatment = async (treatmentId : number) => {
     })
     return response;
   } catch (error) {
-    console.error(error)
+    console.log(error)
   }
 }
