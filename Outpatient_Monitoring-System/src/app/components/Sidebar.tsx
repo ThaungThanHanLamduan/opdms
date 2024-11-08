@@ -3,19 +3,21 @@ import { CiMedicalCross } from "react-icons/ci";
 import { IoLogOutOutline } from "react-icons/io5";
 import { RxDashboard } from "react-icons/rx";
 import Image from "next/image";
-import { useRouter, usePathname } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
 import profile from "@/public/images/doctor.webp";
 import { RiFileSearchLine } from "react-icons/ri";
+import { useLogoutUser } from "../hooks/useAuthApi";
 
 const Sidebar = () => {
-  const router = useRouter();
   const pathname = usePathname();
   const { logout } = useAuth();
+  const logoutMutation = useLogoutUser();
 
   const handleLogout = () => {
     logout();
-    router.push('/auth/login');
+    logoutMutation.mutate();
+    window.location.href = "/auth/login";
   };
 
   return (
@@ -29,9 +31,7 @@ const Sidebar = () => {
           <Link href="/" passHref>
             <button
               className={`w-[200px] flex items-center gap-4 mx-3 px-4 py-3 rounded-lg text-white ${
-                pathname === '/'
-                  ? 'bg-primartactive' 
-                  : 'bg-white/10' 
+                pathname === "/" ? "bg-primartactive" : "bg-white/10"
               }`}
             >
               <RxDashboard />
@@ -41,9 +41,7 @@ const Sidebar = () => {
           <Link href="/user-guide" passHref>
             <button
               className={`w-[200px] flex items-center gap-4 mx-3 px-4 py-3 rounded-lg text-white ${
-                pathname === '/user-guide'
-                  ? 'bg-primartactive' 
-                  : 'bg-white/10 '
+                pathname === "/user-guide" ? "bg-primartactive" : "bg-white/10 "
               }`}
             >
               <RiFileSearchLine />
@@ -63,7 +61,11 @@ const Sidebar = () => {
         </button>
         <hr className="opacity-20" />
         <div className="flex items-center gap-3 py-3">
-          <Image src={profile} alt="Profile" className="w-12 h-12 rounded-full object-cover text-white" />
+          <Image
+            src={profile}
+            alt="Profile"
+            className="w-12 h-12 rounded-full object-cover text-white"
+          />
           <p className="text-sm text-white">Emma Watson</p>
         </div>
       </div>

@@ -5,53 +5,52 @@ import axios from "axios";
 
 const token = getToken();
 
+const headers = {
+  Authorization: `Bearer ${token}`,
+  Accept: "application/json",
+  "Content-Type": "application/json",
+};
+
 export const getAllPatients = async (
   name?: string,
   id?: number,
   treatedStatus?: string,
-  page? :number
+  page?: number
 ) => {
   try {
     const params = new URLSearchParams();
 
-    if (name) params.append('name',name)
+    if (name) params.append("?name", name);
 
-    if (id) params.append('id',id.toString())
+    if (id) params.append("?id", id.toString());
 
-    if (treatedStatus) params.append('treatedStatus', treatedStatus)
+    if (treatedStatus) params.append("?treatedStatus", treatedStatus);
 
-    if(page  !== undefined ) params.append('page', page.toString())
-    const newUrl = `${window.location.pathname}?${params.toString()}`;
-    window.history.pushState({}, "", newUrl)
+    if (page !== undefined && page !== 0)
+      params.append("?page", page.toString());
+    const newUrl = `${window.location.pathname}${params.toString()}`;
+    window.history.pushState({}, "", newUrl);
 
     const response = await axios.get(`${BaseURL}/api/patients`, {
       params,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers,
     });
 
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
 export const getSinglePatient = async ({ id }: { id: number }) => {
   try {
     const response = await axios.get(`${BaseURL}/api/patients/${id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
+      headers,
     });
 
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -61,16 +60,12 @@ export const createPatient = async (patientData: Patient) => {
       `${BaseURL}/api/patients/create`,
       patientData,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -80,16 +75,12 @@ export const updatePatient = async (patientData: Patient) => {
       `${BaseURL}/api/patients/update/${patientData.id}`,
       patientData,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -98,16 +89,12 @@ export const deletePatient = async (patientId: number) => {
     const response = await axios.delete(
       `${BaseURL}/api/patients/delete/${patientId}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -116,16 +103,12 @@ export const getTreatmentStatus = async (patientId: number) => {
     const response = await axios.get(
       `${BaseURL}/api/patients/treatedStatus/${patientId}`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -143,16 +126,12 @@ export const updateTreatmentStatus = async ({
         status: treatedStatus,
       },
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -161,16 +140,12 @@ export const getTreatmentCount = async () => {
     const response = await axios.get(
       `${BaseURL}/api/patients/treatment_count`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };
 
@@ -179,15 +154,11 @@ export const getDiagnosisCount = async () => {
     const response = await axios.get(
       `${BaseURL}/api/patients/diagnosis_count`,
       {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
+        headers,
       }
     );
     return response;
   } catch (error) {
-    console.error(error);
+    console.log(error);
   }
 };

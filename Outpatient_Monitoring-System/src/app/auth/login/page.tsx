@@ -23,26 +23,26 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const signInMutation = useSigninUser();
-  const {login} = useAuth();
+  const { login } = useAuth();
 
   useEffect(() => {
-      if (signInMutation.isSuccess) {
-        const authToken = getToken();
-        if (authToken) login(authToken);
-        toast.success("Login success");
-        router.push("/");
-      }
+    if (signInMutation.isSuccess) {
+      const authToken = getToken();
+      if (authToken) login(authToken);
+      toast.success("Login success");
+    }
   }, [login, router, signInMutation.isSuccess]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    
     signInMutation.mutate(user, {
       onError: (error: any) => {
         if (error.response) {
-          toast.error(error.response.data.message || "Login failed. Please try again.");
+          toast.error(
+            error.response.data.message || "Login failed. Please try again."
+          );
         } else {
           toast.error("An unexpected error occurred.");
         }
@@ -54,7 +54,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen w-screen">
       {/* Left section with image */}
       <Image
         src={loginBackground}
@@ -110,18 +110,24 @@ const Login: React.FC = () => {
               </a>
             </div>
             <div>
-            <div className="flex items-center justify-center gap-2 mb-4 w-[300px]">
-              <p className=" text-slate-500 text-sm">{"Don't have an account?"}</p>
-              <Link href="/auth/signup" className="text-sm text-primary underline">Signup</Link>
+              <div className="flex items-center justify-center gap-2 mb-4 w-[300px]">
+                <p className=" text-slate-500 text-sm">
+                  {"Don't have an account?"}
+                </p>
+                <Link
+                  href="/auth/signup"
+                  className="text-sm text-primary underline"
+                >
+                  Signup
+                </Link>
+              </div>
+              <button
+                type="submit"
+                className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primaryhover active:bg-primartactive transition"
+              >
+                {loading ? <Loader2 className="animate-spin" /> : "Log in"}
+              </button>
             </div>
-            <button
-              type="submit"
-              className="w-full bg-primary text-white py-2 rounded-lg hover:bg-primaryhover active:bg-primartactive transition"
-            >
-              {loading ? <Loader2 className="animate-spin" /> : "Log in"}
-            </button>
-            </div>
-           
           </div>
         </form>
       </div>

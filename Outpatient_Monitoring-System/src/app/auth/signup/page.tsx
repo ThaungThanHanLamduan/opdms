@@ -16,21 +16,23 @@ const Signup: React.FC = () => {
   const router = useRouter();
 
   const [signUpData, setSignUpData] = useState<signUpDataType>({
+    username: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
+  const [confirmPassword, setConfirmPassword] = useState("");
+
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [samePassword, setSamePassword] = useState(true);
   const [loading, setLoading] = useState(false);
-  
+
   const signUpMutation = useSignupUser();
   const { login } = useAuth();
 
   useEffect(() => {
-    setSamePassword(signUpData.password === signUpData.confirmPassword);
-  }, [signUpData.confirmPassword, signUpData.password]);
+    setSamePassword(signUpData.password === confirmPassword);
+  }, [confirmPassword, signUpData.password]);
 
   useEffect(() => {
     if (signUpMutation.isSuccess) {
@@ -49,8 +51,11 @@ const Signup: React.FC = () => {
       return;
     }
 
-    if (signUpData.email && signUpData.password) {
+    if (signUpData.username && signUpData.email && signUpData.password) {
       signUpMutation.mutate(signUpData, {
+          onSuccess: () => {
+
+          },
         onError: (error: any) => {
           toast.error(error.message);
         },
@@ -62,7 +67,7 @@ const Signup: React.FC = () => {
   };
 
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen w-screen">
       {/* Left section with image */}
       <div className="flex w-full md:w-1/2 justify-center items-center h-screen bg-white">
         <form onSubmit={handleSignup} className="w-80 p-6">
@@ -71,6 +76,17 @@ const Signup: React.FC = () => {
           </h3>
 
           <div className=" flex flex-col justify-center items-center gap-6">
+            <input
+              type="text"
+              value={signUpData.username}
+              onChange={(e) =>
+                setSignUpData({ ...signUpData, username: e.target.value })
+              }
+              className="w-[300px] text-black px-4 py-2 border border-primary rounded-lg  focus:outline-none focus:ring-2 focus:ring-primaryactive"
+              placeholder="Enter Username"
+              required
+              aria-label="Username"
+            />
             <input
               type="text"
               value={signUpData.email}
@@ -107,13 +123,8 @@ const Signup: React.FC = () => {
             <div className="relative w-[300px]">
               <input
                 type={showConfirmPassword ? "text" : "password"}
-                value={signUpData.confirmPassword}
-                onChange={(e) =>
-                  setSignUpData({
-                    ...signUpData,
-                    confirmPassword: e.target.value,
-                  })
-                }
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
                 className="w-full text-black px-4 py-2 border border-primary rounded-lg focus:outline-none focus:ring-2 focus:ring-primaryactive"
                 placeholder="Enter Confirm Password"
                 required
