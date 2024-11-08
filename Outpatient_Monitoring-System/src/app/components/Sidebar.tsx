@@ -5,14 +5,15 @@ import { RxDashboard } from "react-icons/rx";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useAuth } from "../contexts/AuthContext";
-import profile from "@/public/images/doctor.webp";
+import profile from "@/public/images/profilephoto.webp";
 import { RiFileSearchLine } from "react-icons/ri";
-import { useLogoutUser } from "../hooks/useAuthApi";
+import { useGetUser, useLogoutUser } from "../hooks/useAuthApi";
 
 const Sidebar = () => {
   const pathname = usePathname();
   const { logout } = useAuth();
   const logoutMutation = useLogoutUser();
+  const { data: user } = useGetUser();
 
   const handleLogout = () => {
     logout();
@@ -64,9 +65,12 @@ const Sidebar = () => {
           <Image
             src={profile}
             alt="Profile"
-            className="w-12 h-12 rounded-full object-cover text-white"
+            className="w-10 h-10 rounded-full object-cover text-white"
           />
-          <p className="text-sm text-white">Emma Watson</p>
+          <div className="flex flex-col gap-2">
+            <p className="text-sm text-white">{user?.username}</p>
+            <p className="text-xs text-slate-300">{user?.email}</p>
+          </div>
         </div>
       </div>
     </div>

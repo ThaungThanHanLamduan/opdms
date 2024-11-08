@@ -8,6 +8,7 @@ import { CgSandClock } from "react-icons/cg";
 import { usePatientDetail } from "../contexts/PatientDetailContext";
 import TreatmentStatus from "./TreatmentStatus";
 import { useGetTreatmentStatus } from "../hooks/usePatientApi";
+import { motion } from "framer-motion";
 
 const PatientProfile: React.FC = () => {
   const { patient } = usePatientDetail();
@@ -26,7 +27,12 @@ const PatientProfile: React.FC = () => {
   const { statusIcon, statusBorder, statusTextColor, statusMessage } = generateStatus(patientStatus);
 
   return (
-    <div className="bg-white px-6 py-[38px] rounded-lg flex flex-col items-center gap-4 w-1/3">
+    <motion.div
+      className="bg-white px-6 py-[38px] rounded-lg flex flex-col items-center gap-4 w-1/3"
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }} 
+      transition={{ duration: 0.5 }}
+    >
       <div className="flex items-center justify-between px-6 gap-6 w-full">
         <Image
           className="w-[80px] p-2 bg-primary rounded-full"
@@ -44,20 +50,24 @@ const PatientProfile: React.FC = () => {
         <p className="text-lg">{patient.patientDetails?.diagnosis}</p>
       </div>
     
-      <div className={`${statusBorder} border flex w-full justify-between items-center gap-6 px-3 py-2 rounded`}>
+      <motion.div
+        className={`${statusBorder} border flex w-full justify-between items-center gap-6 px-3 py-2 rounded`}
+        initial={{ opacity: 0, x: -20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5 }}
+      >
         {statusIcon}
         <div className="flex flex-col justify-center items-start px-8">
           <p className={`${statusTextColor} text-sm`}>{statusMessage}</p>
           {appointmentDate && <p className={`${statusTextColor}`}>{appointmentDate}</p>}
         </div>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 
 export default PatientProfile;
 
-// Status generator function outside the component
 const generateStatus = (status: string) => {
   switch (status) {
     case "TREATED":

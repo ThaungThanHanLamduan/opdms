@@ -1,6 +1,6 @@
 import { signInDataType, signUpDataType } from "@/types/userTypes";
-import { useMutation } from "react-query";
-import { logoutUser, signInUser, signUpUser } from "../api/authApi";
+import { useMutation, useQuery } from "react-query";
+import { getUser, logoutUser, signInUser, signUpUser } from "../api/authApi";
 
 export const useSignupUser = () => {
   return useMutation((newUser: signUpDataType) => signUpUser(newUser));
@@ -13,3 +13,7 @@ export const useSigninUser = () => {
 export const useLogoutUser = () => {
   return useMutation(() => logoutUser());
 };
+
+export const useGetUser = () => {
+  return useQuery(["user"], () => getUser())
+}
