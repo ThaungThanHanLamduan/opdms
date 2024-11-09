@@ -10,7 +10,7 @@ const ErrorPage = ({ error, reset }: { error: Error; reset: () => void }) => {
   }, [error]);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-red-100">
+    <div className="flex flex-col gap-2 items-center justify-center h-screen bg-slate-200">
       <h1 className="text-4xl font-bold text-red-600">Something went wrong!</h1>
       <p className="text-xl text-gray-600 mb-4">Please try again later.</p>
       <button

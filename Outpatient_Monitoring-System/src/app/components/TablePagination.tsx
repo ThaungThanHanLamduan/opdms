@@ -1,73 +1,40 @@
 "use client";
-import React from "react";
-import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Paginate from "react-paginate";
 import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 const TablePagination: React.FC = () => {
-  const {
-    totalPages,
-    currentPage,
-    handlePageChange: onPageChange,
-    refetchPatients
-  } = useOutpatientTable();
+  const { currentPage, setCurrentPage, totalPages } = useOutpatientTable();
 
-  const handlePageChange = (page: number) => {
-    if (page >= 1 && page <= totalPages) {
-      refetchPatients();
-      onPageChange(page);
-    }
-  };
-
-  const generatePageNumbers = () => {
-    const pages = [];
-    for (let i = 1; i <= totalPages; i++) {
-      pages.push(i);
-    }
-    return pages;
+  const handlePageChange = (selectedItem: { selected: number }) => {
+    setCurrentPage(selectedItem.selected);
   };
 
   return (
-    <div className="flex items-center justify-center gap-2 mt-4">
-      {/* Previous Button */}
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        disabled={currentPage === totalPages}
-        className={`p-2 rounded-full bg-primary ${
+    <div className="flex items-center justify-center gap-2">
+      <Paginate
+        breakLabel="..."
+        nextLabel={currentPage === totalPages ? null : ">"}
+        onPageChange={handlePageChange}
+        pageRangeDisplayed={5}
+        pageCount={totalPages}
+        forcePage={currentPage - 1}
+        previousLabel={currentPage === 1 ? null : "<"}
+        renderOnZeroPageCount={null}
+        containerClassName="flex list-none justify-center p-4"
+        pageLinkClassName="px-3 py-1 border rounded bg-primary text-white transition-colors duration-200"
+        previousLinkClassName={
           currentPage === 1
-            ? "cursor-not-allowed opacity-50"
-            : "hover:bg-gray-200"
-        }`}
-      >
-        <IoIosArrowBack />
-      </button>
-
-      {/* Page Numbers */}
-      {generatePageNumbers().map((page) => (
-        <button
-          key={page}
-          onClick={() => handlePageChange(page)}
-          className={`px-3 py-1 rounded border  ${
-            page === currentPage
-              ? "bg-primary text-white"
-              : "hover:bg-gray-200 text-gray-500"
-          }`}
-        >
-          {page}
-        </button>
-      ))}
-
-      {/* Next Button */}
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
-        className={`p-2 rounded-full bg-primary ${
+            ? ""
+            : "mr-2 py-1 px-2 rounded-full bg-primary text-white transition-colors duration-200"
+        }
+        nextLinkClassName={
           currentPage === totalPages
-            ? "cursor-not-allowed opacity-50"
-            : "hover:bg-primaryhover"
-        }`}
-      >
-        <IoIosArrowForward />
-      </button>
+            ? ""
+            : "px-2 py-1 ml-2 rounded-full bg-primary text-white transition-colors duration-200"
+        }
+        breakLinkClassName="px-3 py-1 border rounded bg-primary transition-colors duration-200"
+        activeLinkClassName="px-3 py-1 border rounded bg-primary text-white"
+      />
     </div>
   );
 };

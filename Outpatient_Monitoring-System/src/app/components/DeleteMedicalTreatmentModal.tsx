@@ -1,26 +1,27 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { useDeleteTreatment } from "../hooks/useTreatmentApi";
+import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   treatmentId: number;
-  refetch: any;
 }
 
 const DeleteMedicalTreatmentModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   treatmentId,
-  refetch,
 }) => {
   const deleteTreatmentMutation = useDeleteTreatment();
+  const { refetchTreatments, refetchPatientInfo } = usePatientDetail();
 
   const handleDelete = () => {
     deleteTreatmentMutation.mutate(treatmentId, {
       onSuccess: () => {
-        refetch();
+        refetchTreatments();
+        refetchPatientInfo();
         onClose();
       },
     });

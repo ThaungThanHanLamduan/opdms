@@ -26,7 +26,7 @@ export const getAllPatients = async (
     if (page !== undefined && page !== 0) params.set("page", page.toString());
 
     const newUrl = `${window.location.pathname}?${params.toString()}`;
-    
+
     window.history.replaceState({}, "", newUrl);
 
     const response = await axios.get(`${BaseURL}/api/patients`, {

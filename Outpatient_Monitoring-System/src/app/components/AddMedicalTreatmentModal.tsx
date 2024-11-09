@@ -1,6 +1,7 @@
 import { Treatment } from "@/types/treatmentTypes";
 import React, { useState } from "react";
 import { useCreateTreatment } from "../hooks/useTreatmentApi";
+import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,12 +9,13 @@ interface ModalProps {
   patientId: number;
 }
 
-const MedicalTreatmentModal: React.FC<ModalProps> = ({
+const AddMedicalTreatmentModal: React.FC<ModalProps> = ({
   isOpen,
   onClose,
   patientId,
 }) => {
   const createTreatmentMutation = useCreateTreatment();
+  const {refetchPatientInfo, refetchTreatments} = usePatientDetail();
 
   const [treatmentStatus, setTreatmentStatus] = useState<string>("PENDING");
 
@@ -32,6 +34,10 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({
   });
 
   const [showValidation, setShowValidation] = useState(false);
+
+  // useEffect(() => {
+  //   if(createTreatmentMutation.isSuccess) refetchPatientInfo()
+  // },[createTreatmentMutation.isSuccess, refetchPatientInfo])
 
   const isFormValid =
     treatmentStatus !== "TREATED" ||
@@ -77,6 +83,8 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({
             },
             patientId: 0,
           });
+          refetchTreatments();
+          refetchPatientInfo();
           onClose();
         },
         onError: () => {
@@ -289,4 +297,4 @@ const MedicalTreatmentModal: React.FC<ModalProps> = ({
   );
 };
 
-export default MedicalTreatmentModal;
+export default AddMedicalTreatmentModal;
