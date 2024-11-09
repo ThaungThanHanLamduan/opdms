@@ -16,7 +16,7 @@ const TableBody: React.FC = () => {
 
   return (
     <div ref={tableRef}>
-      <table className="w-full text-left border-collapse text-black my-4">
+      <table className="w-full text-left border-collapse text-black my-3">
         <thead>
           <tr className="border-b">
             {[

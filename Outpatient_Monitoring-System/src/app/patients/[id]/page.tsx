@@ -2,12 +2,12 @@
 import { motion } from "framer-motion";
 import DiagnosisChart from "@/app/components/DiagnosisChart";
 import MedicalTreatementTable from "@/app/components/MedicalTreatementTable";
-import MedicalTreatmentModal from "@/app/components/MedicalTreatmentModal";
 import PatientProfile from "@/app/components/PatientProfile";
 import PersonalInformation from "@/app/components/PersonalInformation";
 import { PatientDetailProvider } from "@/app/contexts/PatientDetailContext";
 import React, { useState } from "react";
 import { TiPlus } from "react-icons/ti";
+import AddMedicalTreatmentModal from "@/app/components/AddMedicalTreatmentModal";
 
 interface PatientsPageProps {
   params: {
@@ -61,9 +61,9 @@ const Patients: React.FC<PatientsPageProps> = ({ params }) => {
             </button>
           </div>
         </motion.div>
-        <MedicalTreatementTable patientId={id} />
+        <MedicalTreatementTable />
         <DiagnosisChart patientId={id} />
-        <MedicalTreatmentModal
+        <AddMedicalTreatmentModal
           isOpen={isModalOpen}
           onClose={toggleModal}
           patientId={id}

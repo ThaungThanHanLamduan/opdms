@@ -6,7 +6,7 @@ import TableBody from "./TableBody";
 
 const OutpatientTable = () => {
   return (
-    <div className="flex flex-col justify-between bg-white px-6 py-4 my-5 rounded-xl h-[700px]">
+    <div className="flex flex-col justify-between bg-white px-6 py-4 my-5 rounded-xl h-[740px]">
       <div>
         <TableHeader />
         <TableBody />

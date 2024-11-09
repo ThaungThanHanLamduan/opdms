@@ -27,14 +27,11 @@ export const OutpatientTableProvider: React.FC<{
   children: React.ReactNode;
 }> = ({ children }) => {
   const authToken = getToken();
-  // Fetch data from API
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [treatedStatus, setTreatedStatus] = useState("");
   const [currentPage, setCurrentPage] = useState(0);
-  const [totalItems, setTotalItems] = useState<number>(0);
 
 
-  // Dropdown Bar
   const stats: DropdownPatient[] = [
     { title: "Total Outpatients", value: "" },
     { title: "Treated Outpatients", value: "TREATED" },
@@ -49,25 +46,14 @@ export const OutpatientTableProvider: React.FC<{
     currentPage
   );
 
-  useEffect(() => {
-    if (data) {
-      setTotalItems(data?.data?.numberOfElements || 0);
-    }
-  }, [data]);
-
   const patients = data?.data?.content;
-  const totalPatients = data?.data?.numberOfElements || 0;
-  const itemsPerPage = data?.data?.size || 1;
 
-  useEffect(() => {
-    setTotalItems(totalPatients);
-  }, [totalPatients]);
 
   useEffect(() => {
     refetchPatients();
   }, [currentPage, refetchPatients]);
 
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const totalPages = data?.data.totalPages;
 
   const { data: treatment, refetch: treatmentRefetch } = useGetTreatmentCount();
   const treatmentCount = treatment?.data;
@@ -75,8 +61,8 @@ export const OutpatientTableProvider: React.FC<{
     if(authToken){
       refetchPatients();
     }
-  },[authToken])
-  // Memoized filtered patients based on search term
+  },[authToken, refetchPatients])
+
   const filteredPatients = useMemo(() => {
     return patients?.filter((patient: Patient) => {
       const term = searchTerm.toLowerCase();
@@ -87,7 +73,6 @@ export const OutpatientTableProvider: React.FC<{
     });
   }, [patients, searchTerm]);
 
-  // Table print functionality
   const tableRef = useRef<HTMLDivElement>(null);
   const handlePrint = () => {
     if (tableRef.current) {
@@ -103,13 +88,11 @@ export const OutpatientTableProvider: React.FC<{
     }
   };
 
-  // Handle search input and refetch data
   const handleSearch = () => {
     setCurrentPage(0);
     refetchPatients();
   };
 
-  // Modal state and handlers for adding patients
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -132,7 +115,7 @@ export const OutpatientTableProvider: React.FC<{
       refetchPatients()
       treatmentRefetch();
     }
-  },[isLogin])
+  },[isLogin, refetchPatients, treatmentRefetch])
 
   return (
     <OutpatientTableContext.Provider

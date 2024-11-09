@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { LuAlarmClock } from "react-icons/lu";
 import { BsCheck, BsX } from "react-icons/bs";
-import { useGetTreatment } from "../hooks/useTreatmentApi";
 import { Treatment } from "@/types/treatmentTypes";
 import EditMedicalTreatmentModal from "./EditMedicalTreatmentModal";
 import DeleteMedicalTreatmentModal from "./DeleteMedicalTreatmentModal";
 import { motion } from "framer-motion"; // Import motion from Framer Motion
+import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
@@ -33,19 +33,13 @@ const getStatusBadge = (status: string) => {
   }
 };
 
-interface TableProps {
-  patientId: number;
-}
-
-const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
-  const { data, refetch } = useGetTreatment(patientId);
+const MedicalTreatmentTable: React.FC = () => {
+  const {medicalTreatments} = usePatientDetail();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(
     null
   );
-
-  const medicalTreatments = data?.data || [];
 
   const openEditModal = (treatment: Treatment) => {
     setSelectedTreatment(treatment);
@@ -161,7 +155,6 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
             isOpen={isEditModalOpen}
             onClose={closeEditModal}
             treatment={selectedTreatment}
-            refetch={refetch}
           />
         </motion.div>
       )}
@@ -176,7 +169,6 @@ const MedicalTreatmentTable: React.FC<TableProps> = ({ patientId }) => {
             isOpen={isDeleteModalOpen}
             onClose={closeDeleteModal}
             treatmentId={selectedTreatment.id!}
-            refetch={refetch}
           />
         </motion.div>
       )}

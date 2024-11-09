@@ -2,17 +2,16 @@
 import React, { useState } from 'react';
 import { Treatment } from '@/types/treatmentTypes';
 import { useUpdateTreatment } from '../hooks/useTreatmentApi';
+import { usePatientDetail } from '../contexts/PatientDetailContext';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
   treatment: any;
-  refetch: any
 }
 
-const EditMedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose, treatment, refetch}) => {
-  console.log(treatment);
-
+const EditMedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose, treatment}) => {
+  const {refetchTreatments} = usePatientDetail()
   const updateTreatmentMutation = useUpdateTreatment();
   const [treatmentStatus, setTreatmentStatus] = useState<string>('PENDING');
   const [formData, setFormData] = useState<Treatment>({
@@ -63,7 +62,7 @@ const EditMedicalTreatmentModal: React.FC<ModalProps> = ({ isOpen, onClose, trea
       updateTreatmentMutation.mutate(formData, {
         onSuccess: () => {
           console.log('Treatment Data:', formData);
-          refetch();
+          refetchTreatments();
           onClose();
         },
         onError: () => {
