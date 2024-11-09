@@ -7,6 +7,8 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { Toaster } from "react-hot-toast";
 import Sidebar from "./components/Sidebar";
 import { usePathname } from "next/navigation";
+import { OutpatientTableProvider } from "./contexts/OutpatientTableContext";
+import ErrorPage from "./error";
 
 const queryClient = new QueryClient();
 
@@ -19,13 +21,15 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
       <body>
         <QueryClientProvider client={queryClient}>
           <AuthProvider>
-            <div className="flex h-screen font-noto  select-none">
-              {!isAuthRoute && <Sidebar />}
-              <main className="w-full min-h-screen">
-                <Toaster position="bottom-center" />
-                {children}
-              </main>
-            </div>
+            <OutpatientTableProvider>
+              <div className="flex h-screen font-noto  select-none">
+                {!isAuthRoute && <Sidebar />}
+                <main className="w-5/6 min-h-screen">
+                  <Toaster position="bottom-center" />
+                  {children}
+                </main>
+              </div>
+            </OutpatientTableProvider>
           </AuthProvider>
         </QueryClientProvider>
       </body>
@@ -34,3 +38,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
 };
 
 export default RootLayout;
+
+export function ErrorBoundary({ error }: { error: Error }) {
+  return <ErrorPage error={error} reset={() => {}} />;
+}

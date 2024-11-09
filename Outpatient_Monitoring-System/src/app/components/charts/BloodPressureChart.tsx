@@ -11,20 +11,39 @@ import {
   Legend,
   ChartOptions
 } from 'chart.js';
+import { useGetTreatment } from '@/app/hooks/useTreatmentApi';
+
+interface DiagnosisChartProps {
+  patientId: number;
+}
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Title, Tooltip, Legend);
 
-const BloodPressureChart = () => {
-  const data = {
-    labels: [
-      'January', 'February', 'March', 'April', 
-      'May', 'June', 'July', 'August', 
-      'September', 'October', 'November', 'December'
-    ],
+const BloodPressureChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
+  const { data } = useGetTreatment(patientId);
+  const treatments = data?.data;
+
+  const bloodPressureData = treatments
+    ?.map((treatment: { appointmentDate: string; medicalTreatmentDetails: { bloodPressure: string } }) => {
+      const [systolic, diastolic] = treatment.medicalTreatmentDetails.bloodPressure.split('/').map(Number);
+      return {
+        date: treatment.appointmentDate,
+        systolic,
+        diastolic,
+      };
+    })
+    .sort((a: { date: Date; }, b: { date: Date; }) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+  const labels = bloodPressureData?.map((entry: { date: string; }) => entry.date) || [];
+  const systolicData = bloodPressureData?.map((entry: { systolic: string; }) => entry.systolic) || [];
+  const diastolicData = bloodPressureData?.map((entry: { diastolic: string; }) => entry.diastolic) || [];
+
+  const dataChart = {
+    labels: labels,
     datasets: [
       {
         label: 'Systolic (mmHg)',
-        data: [118, 120, 122, 125, 117, 119, 121, 123, 118, 116, 120, 124], 
+        data: systolicData,
         borderColor: '#FF6384',
         backgroundColor: 'rgba(255, 99, 132, 0.5)',
         tension: 0.4,
@@ -32,7 +51,7 @@ const BloodPressureChart = () => {
       },
       {
         label: 'Diastolic (mmHg)',
-        data: [76, 78, 80, 79, 74, 75, 77, 78, 76, 74, 75, 79],
+        data: diastolicData,
         borderColor: '#36A2EB',
         backgroundColor: 'rgba(54, 162, 235, 0.5)',
         tension: 0.4,
@@ -49,19 +68,19 @@ const BloodPressureChart = () => {
       },
       title: {
         display: true,
-        text: 'Monthly Blood Pressure Readings (mmHg)',
+        text: 'Blood Pressure Readings Over Time (mmHg)',
       },
     },
     scales: {
       y: {
         beginAtZero: false,
         min: 50, 
-        max: 140, 
+        max: 180,
       },
     },
   };
 
-  return <Line data={data} options={options} />;
+  return <Line data={dataChart} options={options} />;
 };
 
 export default BloodPressureChart;

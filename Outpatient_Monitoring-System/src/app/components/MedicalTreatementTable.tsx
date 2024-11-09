@@ -1,106 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { LuAlarmClock } from "react-icons/lu";
 import { BsCheck, BsX } from "react-icons/bs";
-
-const treatments = [
-  {
-    date: "15/03/2025",
-    bp: "---",
-    glucose: "---",
-    heartRate: "---",
-    weight: "---",
-    height: "---",
-    temp: "---",
-    status: "Pending",
-  },
-  {
-    date: "15/02/2025",
-    bp: "115/85",
-    glucose: 120,
-    heartRate: 75,
-    weight: 54,
-    height: 163,
-    temp: 85,
-    status: "Treated",
-  },
-  {
-    date: "15/01/2024",
-    bp: "---",
-    glucose: "---",
-    heartRate: "---",
-    weight: "---",
-    height: "---",
-    temp: "---",
-    status: "Untreated",
-  },
-  {
-    date: "15/12/2024",
-    bp: "117/78",
-    glucose: 118,
-    heartRate: 68,
-    weight: 53,
-    height: 163,
-    temp: 91,
-    status: "Treated",
-  },
-  {
-    date: "15/11/2024",
-    bp: "120/80",
-    glucose: 95,
-    heartRate: 65,
-    weight: 53,
-    height: 163,
-    temp: 98,
-    status: "Treated",
-  },
-  {
-    date: "15/10/2024",
-    bp: "125/80",
-    glucose: 87.5,
-    heartRate: 72,
-    weight: 53,
-    height: 163,
-    temp: 95,
-    status: "Treated",
-  },
-  {
-    date: "15/09/2024",
-    bp: "120/79",
-    glucose: 83.2,
-    heartRate: 66,
-    weight: 52,
-    height: 163,
-    temp: 91,
-    status: "Treated",
-  },
-  {
-    date: "15/08/2024",
-    bp: "105/75",
-    glucose: 79.6,
-    heartRate: 72,
-    weight: 52,
-    height: 163,
-    temp: 88,
-    status: "Treated",
-  },
-];
+import { Treatment } from "@/types/treatmentTypes";
+import EditMedicalTreatmentModal from "./EditMedicalTreatmentModal";
+import DeleteMedicalTreatmentModal from "./DeleteMedicalTreatmentModal";
+import { motion } from "framer-motion"; // Import motion from Framer Motion
+import { usePatientDetail } from "../contexts/PatientDetailContext";
 
 const getStatusBadge = (status: string) => {
   switch (status) {
-    case "Pending":
+    case "PENDING":
       return (
         <span className="bg-yellow-100 text-yellow-800 px-2 py-1 rounded-lg flex items-center gap-2">
           <LuAlarmClock /> Pending
         </span>
       );
-    case "Treated":
+    case "TREATED":
       return (
         <span className="bg-green-100 text-green-800 px-2 py-1 rounded-lg flex items-center gap-2">
           <BsCheck /> Treated
         </span>
       );
-    case "Untreated":
+    case "UNTREATED":
       return (
         <span className="bg-red-100 text-red-800 px-2 py-1 rounded-lg flex items-center gap-2">
           <BsX /> Untreated
@@ -112,10 +34,36 @@ const getStatusBadge = (status: string) => {
 };
 
 const MedicalTreatmentTable: React.FC = () => {
+  const {medicalTreatments} = usePatientDetail();
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedTreatment, setSelectedTreatment] = useState<Treatment | null>(
+    null
+  );
+
+  const openEditModal = (treatment: Treatment) => {
+    setSelectedTreatment(treatment);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setSelectedTreatment(null);
+    setIsEditModalOpen(false);
+  };
+
+  const openDeleteModal = (treatment: Treatment) => {
+    setSelectedTreatment(treatment);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setSelectedTreatment(null);
+    setIsDeleteModalOpen(false);
+  };
+
   return (
-    <div className="">
-      
-      <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-md overflow-hidden">
+    <div>
+      <table className="w-full border-collapse border border-gray-300 rounded-lg shadow-md">
         <thead>
           <tr className="bg-gray-100">
             <th className="border border-gray-300 px-4 py-2 text-left">Date</th>
@@ -144,44 +92,86 @@ const MedicalTreatmentTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {treatments.map((treatment, index) => (
-            <tr key={index} className="even:bg-gray-100">
+          {medicalTreatments.map((treatment: Treatment) => (
+            <motion.tr
+              key={treatment.patientId}
+              className="even:bg-gray-100"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.date}
+                {treatment.appointmentDate}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.bp}
+                {treatment.medicalTreatmentDetails.bloodPressure}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.glucose}
+                {treatment.medicalTreatmentDetails.glucoseLevel}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.heartRate}
+                {treatment.medicalTreatmentDetails.heartRate}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.weight}
+                {treatment.medicalTreatmentDetails.weight}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.height}
+                {treatment.medicalTreatmentDetails.height}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {treatment.temp}
+                {treatment.medicalTreatmentDetails.bodyTempF}
               </td>
               <td className="border border-gray-300 px-4 py-2">
-                {getStatusBadge(treatment.status)}
+                {getStatusBadge(treatment.treatedStatus)}
               </td>
-              <td className="border  px-4 py-4 flex items-center gap-3">
-                <button className="text-black">
+              <td className="border px-4 py-4 flex items-center gap-3">
+                <button
+                  onClick={() => openEditModal(treatment)}
+                  className="text-black"
+                  aria-label="Edit Treatment"
+                >
                   <FaEdit />
                 </button>
-                <button className="text-red-500 hover:text-red-700">
+                <button
+                  onClick={() => openDeleteModal(treatment)}
+                  className="text-red-500 hover:text-red-700"
+                  aria-label="Delete Treatment"
+                >
                   <FaTrashAlt />
                 </button>
               </td>
-            </tr>
+            </motion.tr>
           ))}
         </tbody>
       </table>
+      {selectedTreatment && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <EditMedicalTreatmentModal
+            isOpen={isEditModalOpen}
+            onClose={closeEditModal}
+            treatment={selectedTreatment}
+          />
+        </motion.div>
+      )}
+      {selectedTreatment && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <DeleteMedicalTreatmentModal
+            isOpen={isDeleteModalOpen}
+            onClose={closeDeleteModal}
+            treatmentId={selectedTreatment.id!}
+          />
+        </motion.div>
+      )}
     </div>
   );
 };

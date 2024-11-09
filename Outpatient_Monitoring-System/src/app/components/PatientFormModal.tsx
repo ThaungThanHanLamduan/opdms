@@ -3,12 +3,14 @@ import React, { useState } from "react";
 import { useCreatePatient } from "../hooks/usePatientApi";
 import { PatientFormModalProps, Patient } from "@/types/patientTypes";
 import Select, { SingleValue } from "react-select";
+import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 
 const PatientFormModal: React.FC<PatientFormModalProps> = ({
   isOpen,
   onClose,
 }) => {
   const createPatientMutation = useCreatePatient();
+  const { refetchPatients } = useOutpatientTable();
 
   const nationalityOptions = [
     { value: "", label: "Select Nationality" },
@@ -37,15 +39,17 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
 
   const [formData, setFormData] = useState<Patient>({
     name: "",
-    dateOfBirth: "",
-    contactNo: "",
-    address: "",
-    gender: 0,
-    bloodType: "A",
-    email: "",
-    diagnosis: "",
-    identification_no: "",
-    nationality: "",
+    patientDetails: {
+      dateOfBirth: "",
+      contactNo: "",
+      address: "",
+      gender: 0,
+      bloodType: "A",
+      email: "",
+      diagnosis: "",
+      identification_no: "",
+      nationality: "",
+    },
   });
 
   const handleChange = (
@@ -53,10 +57,26 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   ) => {
     const { name, value } = e.target;
 
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: name === "gender" ? (value === "Male" ? 0 : 1) : value,
-    }));
+    setFormData((prevFormData) => {
+      if (name === "gender") {
+        return {
+          ...prevFormData,
+          patientDetails: {
+            ...prevFormData.patientDetails,
+            gender: value === "Male" ? 1 : 0,
+          },
+        };
+      } else if (name in prevFormData.patientDetails) {
+        return {
+          ...prevFormData,
+          patientDetails: {
+            ...prevFormData.patientDetails,
+            [name]: value,
+          },
+        };
+      }
+      return { ...prevFormData, [name]: value };
+    });
   };
 
   const handleNationalityChange = (
@@ -64,7 +84,10 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   ) => {
     setFormData((prevData) => ({
       ...prevData,
-      nationality: newValue ? newValue.value : "",
+      patientDetails: {
+        ...prevData.patientDetails,
+        nationality: newValue ? newValue.value : "",
+      },
     }));
   };
 
@@ -73,6 +96,21 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
     createPatientMutation.mutate(formData, {
       onSuccess: () => {
         console.log(formData);
+        refetchPatients();
+        setFormData({
+          name: "",
+          patientDetails: {
+            dateOfBirth: "",
+            contactNo: "",
+            address: "",
+            gender: 0,
+            bloodType: "A",
+            email: "",
+            diagnosis: "",
+            identification_no: "",
+            nationality: "",
+          },
+        });
         onClose();
       },
       onError: (error) => {
@@ -84,7 +122,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center select-none backdrop-blur-sm transition-opacity duration-300 z-10">
       <div className="bg-white p-8 rounded-lg shadow-lg w-[500px] max-w-full">
         <h2 className="text-2xl mb-6 text-black">
           Patient Personal Information
@@ -107,7 +145,10 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-1" htmlFor="dateOfBirth">
+            <label
+              className="block text-sm font-medium mb-1"
+              htmlFor="dateOfBirth"
+            >
               Date of Birth
             </label>
             <input
@@ -115,7 +156,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               id="dateOfBirth"
               name="dateOfBirth"
               className="w-full border rounded px-3 py-2"
-              value={formData.dateOfBirth}
+              value={formData.patientDetails.dateOfBirth}
               onChange={handleChange}
               required
             />
@@ -126,10 +167,11 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
             <select
               name="gender"
               className="w-full border rounded px-3 py-2"
-              value={formData.gender}
+              value={formData.patientDetails.gender === 1 ? "Male" : "Female"}
               onChange={handleChange}
               required
             >
+              <option value="">Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
             </select>
@@ -140,7 +182,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
             <select
               name="bloodType"
               className="w-full border rounded px-3 py-2"
-              value={formData.bloodType}
+              value={formData.patientDetails.bloodType}
               onChange={handleChange}
               required
             >
@@ -158,7 +200,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               name="email"
               className="w-full border rounded px-3 py-2"
               placeholder="Enter Email"
-              value={formData.email}
+              value={formData.patientDetails.email}
               onChange={handleChange}
             />
           </div>
@@ -171,7 +213,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               name="identification_no"
               className="w-full border rounded px-3 py-2"
               placeholder="Enter ID Number"
-              value={formData.identification_no}
+              value={formData.patientDetails.identification_no}
               onChange={handleChange}
               required
             />
@@ -187,7 +229,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               placeholder="Select Nationality"
               onChange={handleNationalityChange}
               value={nationalityOptions.find(
-                (option) => option.value === formData.nationality
+                (option) => option.value === formData.patientDetails.nationality
               )}
             />
           </div>
@@ -199,7 +241,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               name="contactNo"
               className="w-full border rounded px-3 py-2"
               placeholder="Enter Contact"
-              value={formData.contactNo}
+              value={formData.patientDetails.contactNo}
               onChange={handleChange}
               required
             />
@@ -212,7 +254,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               name="address"
               className="w-full border rounded px-3 py-2"
               placeholder="Enter Address"
-              value={formData.address}
+              value={formData.patientDetails.address}
               onChange={handleChange}
             />
           </div>
@@ -224,7 +266,7 @@ const PatientFormModal: React.FC<PatientFormModalProps> = ({
               name="diagnosis"
               className="w-full border rounded px-3 py-2"
               placeholder="Enter Patient's Diagnosis"
-              value={formData.diagnosis}
+              value={formData.patientDetails.diagnosis}
               onChange={handleChange}
             />
           </div>

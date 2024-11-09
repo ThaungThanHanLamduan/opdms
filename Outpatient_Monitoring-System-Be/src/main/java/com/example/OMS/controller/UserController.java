@@ -1,5 +1,6 @@
 package com.example.OMS.controller;
 
+import com.example.OMS.model.GetUserResponse;
 import com.example.OMS.model.User;
 import com.example.OMS.service.UserService;
 import org.apache.coyote.Response;
@@ -8,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
-@CrossOrigin(origins = "http://localhost:8080")
 
 public class UserController {
     private final UserService userService;
@@ -17,6 +17,14 @@ public class UserController {
         this.userService = userService;
     }
 
+    @GetMapping("/user")
+    public ResponseEntity<GetUserResponse> getUserDetails(@RequestHeader("Authorization") String token){
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        GetUserResponse user = userService.getUserDetails(token);
+        return ResponseEntity.ok(user);
+    }
     @PostMapping("/signup")
     public ResponseEntity<User> signUp(@RequestBody User user){
         User createdUser = userService.signup(user);
@@ -24,8 +32,17 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<User> login(@RequestBody User user){
-        User loggedUser = userService.login(user);
-        return ResponseEntity.ok(loggedUser);
+    public ResponseEntity<String> login(@RequestBody User user){
+        String token = userService.login(user);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<String> logout(@RequestHeader("Authorization") String token){
+        if (token.startsWith("Bearer ")) {
+            token = token.substring(7);
+        }
+        userService.logout(token);
+        return ResponseEntity.ok("You have been logged out successfully.");
     }
 }

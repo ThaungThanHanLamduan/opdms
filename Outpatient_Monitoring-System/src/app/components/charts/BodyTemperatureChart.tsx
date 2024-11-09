@@ -1,6 +1,6 @@
 // components/BodyTemperatureChart.tsx
-import React from 'react';
-import { Line } from 'react-chartjs-2';
+import React from "react";
+import { Line } from "react-chartjs-2";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -10,20 +10,58 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
+import { useGetTreatment } from "@/app/hooks/useTreatmentApi";
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
+interface DiagnosisChartProps {
+  patientId: number;
+}
 
-const BodyTemperatureChart: React.FC = () => {
-  const bodyTemperatureData = {
-    labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  Title,
+  Tooltip,
+  Legend
+);
+
+const BodyTemperatureChart: React.FC<DiagnosisChartProps> = ({ patientId }) => {
+  const { data } = useGetTreatment(patientId);
+  const treatments = data?.data;
+
+  const bodyTemperatureLevels = treatments
+    ?.map(
+      (treatment: {
+        appointmentDate: string;
+        medicalTreatmentDetails: { bodyTempF: number };
+      }) => ({
+        date: treatment.appointmentDate,
+        bodyTemperature: treatment.medicalTreatmentDetails.bodyTempF,
+      })
+    )
+    .sort(
+      (a: { date: Date }, b: { date: Date }) =>
+        new Date(a.date).getTime() - new Date(b.date).getTime()
+    );
+
+  const labels =
+    bodyTemperatureLevels?.map((entry: { date: string }) => entry.date) || [];
+  const bodyTemperatureData =
+    bodyTemperatureLevels?.map(
+      (entry: { bodyTemperature: number }) => entry.bodyTemperature
+    ) || [];
+
+  const bodyTemperatureLevelData = {
+    labels,
     datasets: [
       {
-        label: 'Body Temperature (°F)',
-        data: [98.6, 98.8, 98.4, 99.1, 98.7, 98.9, 98.5],
+        label: "Body Temperature (°F)",
+        data: bodyTemperatureData,
         fill: false,
-        borderColor: 'rgba(54,162,235,1)',
-        tension: 0.1,
+        borderColor: "rgba(54,162,235,1)",
+        tension: 0.4,
       },
     ],
   };
@@ -31,12 +69,12 @@ const BodyTemperatureChart: React.FC = () => {
   return (
     <div>
       <Line
-        data={bodyTemperatureData}
+        data={bodyTemperatureLevelData}
         options={{
           responsive: true,
           plugins: {
-            legend: { position: 'top' },
-            title: { display: true, text: 'Body Temperature Over Time' },
+            legend: { position: "top" },
+            title: { display: true, text: "Body Temperature Over Time" },
           },
         }}
       />

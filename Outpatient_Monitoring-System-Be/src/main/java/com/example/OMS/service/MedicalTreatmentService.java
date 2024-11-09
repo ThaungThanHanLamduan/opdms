@@ -1,14 +1,16 @@
 package com.example.OMS.service;
 
-import com.example.OMS.model.MedicalTreatment;
-import com.example.OMS.model.Patient;
+import com.example.OMS.model.*;
 import com.example.OMS.repository.MedicalTreatmentRepository;
 import com.example.OMS.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class MedicalTreatmentService {
@@ -52,20 +54,23 @@ public class MedicalTreatmentService {
             if(medicalTreatmentData.getAppointmentDate() != null){
                 existingTreatment.setAppointmentDate(medicalTreatmentData.getAppointmentDate());
             }
-            if(medicalTreatmentData.getBloodPressure() != null){
-                existingTreatment.setBloodPressure(medicalTreatmentData.getBloodPressure());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getBloodPressure() != null){
+                existingTreatment.getMedicalTreatmentDetails().setBloodPressure(medicalTreatmentData.getMedicalTreatmentDetails().getBloodPressure());
             }
-            if(medicalTreatmentData.getGlucoseLevel() != null){
-                existingTreatment.setGlucoseLevel(medicalTreatmentData.getGlucoseLevel());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getGlucoseLevel() != null){
+                existingTreatment.getMedicalTreatmentDetails().setGlucoseLevel(medicalTreatmentData.getMedicalTreatmentDetails().getGlucoseLevel());
             }
-            if(medicalTreatmentData.getHeight() != null){
-                existingTreatment.setHeight(medicalTreatmentData.getHeight());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getHeight() != null){
+                existingTreatment.getMedicalTreatmentDetails().setHeight(medicalTreatmentData.getMedicalTreatmentDetails().getHeight());
             }
-            if(medicalTreatmentData.getWeight() != null){
-                existingTreatment.setWeight(medicalTreatmentData.getWeight());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getWeight() != null){
+                existingTreatment.getMedicalTreatmentDetails().setWeight(medicalTreatmentData.getMedicalTreatmentDetails().getWeight());
             }
-            if(medicalTreatmentData.getHeartRate() != null){
-                existingTreatment.setHeartRate(medicalTreatmentData.getHeartRate());
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate() != null){
+                existingTreatment.getMedicalTreatmentDetails().setHeartRate(medicalTreatmentData.getMedicalTreatmentDetails().getHeartRate());
+            }
+            if(medicalTreatmentData.getMedicalTreatmentDetails().getBodyTempF() != null){
+                existingTreatment.getMedicalTreatmentDetails().setBodyTempF(medicalTreatmentData.getMedicalTreatmentDetails().getBodyTempF());
             }
             if(medicalTreatmentData.getTreatedStatus() != null){
                 existingTreatment.setTreatedStatus(medicalTreatmentData.getTreatedStatus());
@@ -75,7 +80,7 @@ public class MedicalTreatmentService {
         }
     }
 
-    public MedicalTreatment.TreatmentStatus getPatientTreatedStatus(Long patientId){
+    public GetTreatmentStatusResponse getPatientTreatedStatus(Long patientId){
         Optional<Patient> patientOpt = patientRepository.findById(patientId);
         if(!patientOpt.isPresent()){
             throw new IllegalArgumentException("Patient with id " + patientId + " does not exist.");
@@ -84,9 +89,15 @@ public class MedicalTreatmentService {
             List<MedicalTreatment> treatments = existingPatient.getMedicalTreatments();
             if(treatments.size() > 0){
                 MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
-                return lastTreatment.getTreatedStatus();
+                GetTreatmentStatusResponse response = new GetTreatmentStatusResponse();
+                response.setStatus(lastTreatment.getTreatedStatus() + "");
+                response.setAppointmentDate(lastTreatment.getAppointmentDate() + "");
+                return response;
             }else{
-                throw new IllegalArgumentException("This patient has no treatment history");
+                GetTreatmentStatusResponse response = new GetTreatmentStatusResponse();
+                response.setAppointmentDate("");
+                response.setStatus("");
+                return response;
             }
         }
     }
@@ -101,9 +112,52 @@ public class MedicalTreatmentService {
             if(treatments.size() > 0){
                 MedicalTreatment lastTreatment = existingPatient.getMedicalTreatments().getLast();
                 lastTreatment.setTreatedStatus(status);
+                medicalTreatmentRepository.save(lastTreatment);
             }else{
-                throw new IllegalArgumentException("This patient has no treatment history");
+                throw new IllegalArgumentException("This patient doesn't have medical treatment history.");
             }
+        }
+    }
+
+    public List<GetTreatedStatusCountResponse> getTreatedStatusCount(){
+        List<MedicalTreatment> treatments = medicalTreatmentRepository.findAll();
+
+        Map<MedicalTreatment.TreatmentStatus, Integer> treatmentMap = new HashMap<>();
+        for (MedicalTreatment.TreatmentStatus status : MedicalTreatment.TreatmentStatus.values()) {
+            if(status != MedicalTreatment.TreatmentStatus.TOTAL){
+                treatmentMap.put(status, 0);
+            }
+        }
+
+        Integer totalTreatmentsCount = treatments.size();
+
+        for (MedicalTreatment treatment : treatments) {
+            MedicalTreatment.TreatmentStatus treatedStatus = treatment.getTreatedStatus();
+            treatmentMap.put(treatedStatus, treatmentMap.get(treatedStatus) + 1);
+        }
+
+        List<GetTreatedStatusCountResponse> statusCountResponses = treatmentMap.entrySet().stream()
+                .map(entry -> {
+                    GetTreatedStatusCountResponse response = new GetTreatedStatusCountResponse();
+                    response.setTreatedStatus(entry.getKey());
+                    response.setCount(entry.getValue());
+                    return response;
+                }).collect(Collectors.toList());
+
+        GetTreatedStatusCountResponse totalResponse = new GetTreatedStatusCountResponse();
+        totalResponse.setTreatedStatus(MedicalTreatment.TreatmentStatus.TOTAL);
+        totalResponse.setCount(totalTreatmentsCount);
+        statusCountResponses.add(totalResponse);
+
+        return statusCountResponses;
+    }
+
+    public void deleteMedicalTreatment(Long treatmentId){
+        Optional<MedicalTreatment> existingTreatmentOptional = medicalTreatmentRepository.findById(treatmentId);
+        if(!existingTreatmentOptional.isPresent()){
+            throw new IllegalArgumentException("Treatment not found");
+        }else{
+            medicalTreatmentRepository.deleteById(treatmentId);
         }
     }
 }

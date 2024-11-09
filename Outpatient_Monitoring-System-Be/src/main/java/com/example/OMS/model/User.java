@@ -18,9 +18,6 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;
 
-    @Column(name = "access_token", nullable = true)
-    private Long accessToken;
-
     //default constructor for JPA, so it can fill in the info from the database.
     public User() {
     }
@@ -61,13 +58,5 @@ public class User {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Long getAccessToken() {
-        return accessToken;
-    }
-
-    public void setAccessToken(Long accessToken) {
-        this.accessToken = accessToken;
     }
 }

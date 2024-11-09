@@ -21,29 +21,19 @@ public class MedicalTreatment {
     @Column(name = "appointment_date", nullable = false)
     private LocalDate appointmentDate;
 
-    @Column(name = "heart_rate", nullable=true)
-    private Integer heartRate;
-
-    @Column(name = "blood_pressure", nullable = true)
-    private String bloodPressure;
-
-    @Column(name = "glucose_level", nullable = true)
-    private Integer glucoseLevel;
-
-    @Column(name = "height_cm", nullable = true)
-    private Double height;
-
-    @Column(name = "weight_kg", nullable = true)
-    private Double weight;
-
     @Enumerated(EnumType.STRING)
     @Column(name = "treated_status", nullable = true)
     private TreatmentStatus treatedStatus = TreatmentStatus.PENDING;
 
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "medical_treatment_details_id", referencedColumnName = "id")
+    private MedicalTreatmentDetails medicalTreatmentDetails;
+
     public enum TreatmentStatus {
         PENDING,
         TREATED,
-        UNTREATED
+        UNTREATED,
+        TOTAL
     }
 
     public Long getId() {
@@ -70,46 +60,6 @@ public class MedicalTreatment {
         this.appointmentDate = appointmentDate;
     }
 
-    public Integer getHeartRate() {
-        return heartRate;
-    }
-
-    public void setHeartRate(Integer heartRate) {
-        this.heartRate = heartRate;
-    }
-
-    public String getBloodPressure() {
-        return bloodPressure;
-    }
-
-    public void setBloodPressure(String bloodPressure) {
-        this.bloodPressure = bloodPressure;
-    }
-
-    public Integer getGlucoseLevel() {
-        return glucoseLevel;
-    }
-
-    public void setGlucoseLevel(Integer glucoseLevel) {
-        this.glucoseLevel = glucoseLevel;
-    }
-
-    public Double getHeight() {
-        return height;
-    }
-
-    public void setHeight(Double height) {
-        this.height = height;
-    }
-
-    public Double getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Double weight) {
-        this.weight = weight;
-    }
-
     public TreatmentStatus getTreatedStatus() {
         return treatedStatus;
     }
@@ -118,4 +68,11 @@ public class MedicalTreatment {
         this.treatedStatus = treatedStatus;
     }
 
+    public MedicalTreatmentDetails getMedicalTreatmentDetails() {
+        return medicalTreatmentDetails;
+    }
+
+    public void setMedicalTreatmentDetails(MedicalTreatmentDetails medicalTreatmentDetails) {
+        this.medicalTreatmentDetails = medicalTreatmentDetails;
+    }
 }

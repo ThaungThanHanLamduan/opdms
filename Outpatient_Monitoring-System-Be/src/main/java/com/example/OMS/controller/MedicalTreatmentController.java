@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:8080")
 @RequestMapping("/api/treatments")
 public class MedicalTreatmentController {
     private final MedicalTreatmentService medicalTreatmentService;
@@ -39,4 +38,9 @@ public class MedicalTreatmentController {
         return ResponseEntity.ok(updatedMedicalTreatment);
     }
 
+    @DeleteMapping("/delete/{treatmentId}")
+    public ResponseEntity<String> deleteMedicalRecord(@PathVariable Long treatmentId){
+        medicalTreatmentService.deleteMedicalTreatment(treatmentId);
+        return ResponseEntity.ok("Treatment with id " + treatmentId + " has been deleted successfully!");
+    }
 }

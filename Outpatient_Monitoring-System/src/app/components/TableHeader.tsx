@@ -1,13 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
+
 import { FaPlus } from "react-icons/fa6";
 import { FiSearch } from "react-icons/fi";
 import { MdOutlineFileDownload } from "react-icons/md";
 import Dropdownbar from "./Dropdownbar";
 import { useOutpatientTable } from "../contexts/OutpatientTableContext";
 import PatientFormModal from "./PatientFormModal";
-import { useState } from "react";
-import { Patient } from "@/types/patientTypes";
+import { motion } from "framer-motion";
 
 const HeaderButton: React.FC<{
   onClick?: () => void;
@@ -15,28 +14,33 @@ const HeaderButton: React.FC<{
   label: string;
   rounded?: boolean;
 }> = ({ onClick, icon, label, rounded = false }) => (
-  <button
+  <motion.button
+    whileHover={{ scale: 1.05 }}
+    whileTap={{ scale: 0.95 }}
     onClick={onClick}
-    className={`bg-primary hover:bg-primaryhover active:bg-primartactive  text-white flex items-center gap-2 px-4 py-1 ${
+    className={`bg-primary hover:bg-primaryhover active:bg-primaryactive text-white flex items-center gap-2 px-4 py-1 ${
       rounded ? "rounded-full px-3" : "rounded"
     }`}
   >
     {icon && <span>{icon}</span>}
     <span>{label}</span>
-  </button>
+  </motion.button>
 );
 
 const TableHeader = () => {
-  const { handlePrint, openModal, closeModal, isModalOpen, selectedTitle } =
-    useOutpatientTable();
+  const {
+    handlePrint,
+    openModal,
+    closeModal,
+    isModalOpen,
+    selectedTitle,
+    searchTerm,
+    setSearchTerm,
+    handleSearch,
+  } = useOutpatientTable();
 
-  const [patients, setPatients] = useState<Patient[]>([]);
-  console.log(patients);
-
-  const handleAddPatient = (patient: Patient) => {
-    setPatients((prev) => [...prev, patient]);
-    console.log("Added patient:", patient);
-    closeModal();
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
   };
 
   return (
@@ -55,26 +59,38 @@ const TableHeader = () => {
             label="Add Patient"
             rounded
           />
-
           <div className="relative">
             <input
               type="text"
               className="w-[200px] border px-4 py-1 rounded text-gray-600"
               placeholder="Search"
+              value={searchTerm}
+              onChange={handleSearchChange}
             />
             <FiSearch
-              className="absolute top-2 right-2 text-slate-400"
+              onClick={handleSearch}
+              className="absolute top-2 right-2 text-slate-400 cursor-pointer"
               size="15px"
             />
           </div>
           <Dropdownbar />
         </div>
       </div>
-      <PatientFormModal
-        isOpen={isModalOpen}
-        onClose={closeModal}
-        onSubmit={handleAddPatient}
-      />
+
+      <motion.div
+        initial={{ opacity: 0, y: -50 }}
+        animate={{ opacity: isModalOpen ? 1 : 0, y: isModalOpen ? 0 : -50 }}
+        transition={{ duration: 0.3 }}
+        style={{ display: isModalOpen ? "block" : "none" }}
+      >
+        <PatientFormModal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          onSubmit={() => {
+            closeModal(); 
+          }}
+        />
+      </motion.div>
     </>
   );
 };
